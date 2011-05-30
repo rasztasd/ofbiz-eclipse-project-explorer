@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.ofbiz.plugin/src"
+    modelPluginID="org.ofbiz.plugin" modelName="Beanshell_syntaxtree" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>beanshell_syntaxtree.ecore</foreignModel>
+  <genPackages prefix="" disposableProviderFactory="true" ecorePackage="beanshell_syntaxtree.ecore#/"/>
+</genmodel:GenModel>

@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.6"?>
+<plugin>
+   <extension
+         id="org.ofbiz.plugin.views"
+         point="org.eclipse.ui.views">
+      <category
+            id="org.ofbiz.plugin.category"
+            name="OFBiz">
+      </category>
+      <view
+            category="org.ofbiz.plugin.category"
+            class="org.ofbiz.plugin.ExplorerView"
+            icon="icons/refresh.gif"
+            id="org.ofbiz.plugin.explorerview"
+            name="OFBiz Explorer">
+      </view>
+   </extension>
+  <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+    <factory 
+       uri = "https://github.com/rasztasd/ofbiz-eclipse-project-explorer" 
+       class = "org.ofbiz.plugin.provider.OfbizItemProviderAdapterFactory"
+       supportedTypes = 
+         "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
+          org.eclipse.emf.edit.provider.IStructuredItemContentProvider
+          org.eclipse.emf.edit.provider.ITreeItemContentProvider
+          org.eclipse.emf.edit.provider.IItemLabelProvider
+          org.eclipse.emf.edit.provider.IItemPropertySource" />
+  </extension>
+  
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package
+       uri = "https://github.com/rasztasd/ofbiz-eclipse-project-explorer"
+       class = "org.ofbiz.plugin.OfbizPackage"
+       genModel = "model/ofbiz.genmodel" /> 
+  </extension>
+  <extension
+        id="org.ofbiz.plugin.text"
+        name="OFBiz text marker"
+        point="org.eclipse.core.resources.markers">
+     <persistent
+           value="false">
+     </persistent>
+     <super
+           type="org.eclipse.core.resources.textmarker">
+     </super>
+     <attribute
+           name="name">
+     </attribute>
+  </extension>
+  <extension
+        id="org.ofbiz.plugin.problem"
+        name="OFBiz problem marker"
+        point="org.eclipse.core.resources.markers">
+     <persistent
+           value="false">
+     </persistent>
+     <super
+           type="org.eclipse.core.resources.problemmarker">
+     </super>
+     <attribute
+           name="name">
+     </attribute>
+     <attribute
+           name="method">
+     </attribute>
+  </extension>
+  <extension
+        point="org.eclipse.ui.popupMenus">
+     <objectContribution
+           id="org.ofbiz.plugin.serviceinvocation"
+           objectClass="org.ofbiz.plugin.ofbiz.ServiceInvocation">
+        <action
+              class="org.ofbiz.plugin.GoToInvocation"
+              icon="icons/full/obj16/IEntity.gif"
+              id="org.ofbiz.plugin.action.showinvocation"
+              label="Show Invocation"
+              tooltip="Show Service invocation in Java file">
+        </action>
+     </objectContribution>
+     <objectContribution
+           id="org.ofbiz.plugin.entity"
+           objectClass="org.ofbiz.plugin.ofbiz.IEntity">
+        <action
+              class="org.ofbiz.plugin.OpenFileAction"
+              icon="icons/full/obj16/IEntity.gif"
+              id="org.ofbiz.plugin.action.showentitydef"
+              label="Show Definition"
+              tooltip="Opens the file containing the definition of this Entity.">
+        </action>
+     </objectContribution>
+     <objectContribution
+           id="org.ofbiz.plugin.service"
+           objectClass="org.ofbiz.plugin.ofbiz.Service">
+        <action
+              class="org.ofbiz.plugin.OpenFileAction"
+              icon="icons/full/obj16/Service.gif"
+              id="org.ofbiz.plugin.action.showservicedef"
+              label="Show Definition"
+              tooltip="Opens the file containing the definition of this Service.">
+        </action>
+        <action
+              class="org.ofbiz.plugin.OpenFileAction"
+              icon="icons/full/obj16/Service.gif"
+              id="org.ofbiz.plugin.action.showserviceimpl"
+              label="Show Implementation"
+              tooltip="Opens the file containing the implementation of this Service.">
+        </action>
+     </objectContribution>
+     <viewerContribution
+           id="org.ofbiz.plugin.xmleditor"
+           targetID="#TextEditorContext">
+        <menu
+              id="org.ofbiz.plugin.menu"
+              label="OFBiz Explorer"
+              path="additions">
+           <groupMarker
+                 name="search">
+           </groupMarker>
+        </menu>
+        <action
+              class="org.ofbiz.plugin.FinderAction"
+              icon="icons/full/obj16/IEntity.gif"
+              id="org.ofbiz.plugin.xmleditor.find"
+              label="Find"
+              menubarPath="org.ofbiz.plugin.menu/search">
+        </action>
+     </viewerContribution>
+     <viewerContribution
+           id="org.ofbiz.plugin.xmleditor2"
+           targetID="org.eclipse.ui.DefaultTextEditor">
+        <menu
+              id="org.ofbiz.plugin.menu"
+              label="OFBiz Explorer"
+              path="additions">
+           <groupMarker
+                 name="search">
+           </groupMarker>
+        </menu>
+        <action
+              class="org.ofbiz.plugin.FinderAction"
+              icon="icons/full/obj16/IEntity.gif"
+              id="org.ofbiz.plugin.xmleditor.find"
+              label="Findxxx"
+              menubarPath="org.ofbiz.plugin.menu/search">
+        </action>
+     </viewerContribution>
+     <objectContribution
+           id="org.ofbiz.plugin.hasxmldefinition"
+           objectClass="org.ofbiz.plugin.ofbiz.HasXmlDefinition">
+        <action
+              class="org.ofbiz.plugin.parser.GotoXmlDefinition"
+              icon="icons/full/obj16/IEntity.gif"
+              id="org.ofbiz.plugin.action.showxmldefinition"
+              label="Show Definition"
+              tooltip="Show xml file.">
+        </action>
+     </objectContribution>
+     <objectContribution
+           id="org.ofbiz.plugin.hasdocumentation"
+           objectClass="org.ofbiz.plugin.ofbiz.HasDocumentation">
+        <action
+              class="org.ofbiz.plugin.doc.ShowDocumentation"
+              icon="icons/full/obj16/IEntity.gif"
+              id="org.ofbiz.plugin.action.showxmldefinition"
+              label="Show Documentation"
+              tooltip="Javadoc, Xml">
+        </action>
+     </objectContribution>
+     <objectContribution
+           adaptable="true"
+           id="org.ofbiz.plugin.contribution1"
+           nameFilter="*"
+           objectClass="org.eclipse.core.resources.IProject">
+        <action
+              class="org.ofbiz.plugin.builder.ToggleNatureAction"
+              enablesFor="+"
+              id="org.ofbiz.plugin.addRemoveNatureAction"
+              label="Add/Remove Ofbiz Nature"
+              menubarPath="additions">
+        </action>
+     </objectContribution>
+  </extension>
+   
+  <extension
+        point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+     <hyperlinkDetector
+           class="org.ofbiz.plugin.hyperlink.OfbizHyperlinkDetector"
+           id="org.ofbiz.plugin.hyperlink.OfbizHyperlinkDetector"
+           name="Ofbiz hyperlink detector"
+           targetId="org.eclipse.ui.DefaultTextEditor">
+     </hyperlinkDetector>
+  </extension>
+  <extension
+        point="org.eclipse.ui.commands">
+     <category
+           id="org.ofbiz.plugin.commands.category"
+           name="Ofbiz command">
+     </category>
+     <command
+           categoryId="org.ofbiz.plugin.commands.category"
+           id="org.ofbiz.plugin.commands.ofbizValidateCommand"
+           name="Validate current file">
+     </command>
+     <command
+           categoryId="org.ofbiz.plugin.commands.category"
+           id="org.ofbiz.plugin.commands.serviceInvocationCommand"
+           name="Insert service invocation">
+     </command>
+  </extension>
+  <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="org.ofbiz.plugin.handlers.OfbizValidateHandler"
+           commandId="org.ofbiz.plugin.commands.ofbizValidateCommand">
+     </handler>
+     <handler
+           class="org.ofbiz.plugin.handlers.ServiceInvocationHandler"
+           commandId="org.ofbiz.plugin.commands.serviceInvocationCommand">
+     </handler>
+  </extension>
+  <extension
+        point="org.eclipse.ui.bindings">
+     <key
+           commandId="org.ofbiz.plugin.commands.ofbizValidateCommand"
+           contextId="org.eclipse.ui.contexts.window"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+           sequence="M1+6">
+     </key>
+     <key
+           commandId="org.ofbiz.plugin.commands.serviceInvocationCommand"
+           contextId="org.eclipse.ui.contexts.window"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+           sequence="M1+M3+S">
+     </key>
+  </extension>
+  <extension
+        point="org.eclipse.ui.menus">
+     <menuContribution
+           locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+        <menu
+              id="org.ofbiz.plugin.menus.ofbizMenu"
+              label="Ofbiz"
+              mnemonic="M">
+           <command
+                 commandId="org.ofbiz.plugin.commands.ofbizValidateCommand"
+                 id="org.ofbiz.plugin.menus.ofbizValidateCommand"
+                 mnemonic="V">
+           </command>
+           <command
+                 commandId="org.ofbiz.plugin.commands.serviceInvocationCommand"
+                 id="org.ofbiz.plugin.menus.serviceInvocationCommand"
+                 mnemonic="S">
+           </command>
+        </menu>
+     </menuContribution>
+     <menuContribution
+           locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+        <toolbar
+              id="org.ofbiz.plugin.toolbars.ofbizToolBar">
+           <command
+                 commandId="org.ofbiz.plugin.commands.ofbizValidateCommand"
+                 icon="icons/ofbiz.png"
+                 id="org.ofbiz.plugin.toolbars.ofbizValidateCommand"
+                 tooltip="Validate current ofbiz file">
+           </command>
+        </toolbar>
+     </menuContribution>
+  </extension>
+  <extension
+        id="xmlProblem"
+        name="XML Problem"
+        point="org.eclipse.core.resources.markers">
+     <super
+           type="org.eclipse.core.resources.problemmarker">
+     </super>
+     <persistent
+           value="true">
+     </persistent>
+  </extension>
+</plugin>

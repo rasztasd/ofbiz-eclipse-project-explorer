@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright 2011 McAllister Dániel&#xD;&#xA;&#xD;&#xA;Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);&#xD;&#xA;you may not use this file except in compliance with the License.&#xD;&#xA;You may obtain a copy of the License at &#xD;&#xA;&#xD;&#xA;    http://www.apache.org/licenses/LICENSE-2.0 &#xD;&#xA;    &#xD;&#xA;Unless required by applicable law or agreed to in writing, software&#xD;&#xA;distributed under the License is distributed on an &quot;AS IS&quot; BASIS,&#xD;&#xA;WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.&#xD;&#xA;See the License for the specific language governing permissions and&#xD;&#xA;limitations under the License."
+    modelDirectory="/org.ofbiz.plugin/gen" editDirectory="/org.ofbiz.plugin/gen" editorDirectory=""
+    modelPluginID="org.ofbiz.plugin" modelName="Ofbiz" modelPluginClass="" editPluginClass="EditPlugin"
+    editorPluginClass="" testsDirectory="" testSuiteClass="" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false" editPluginID="org.ofbiz.plugin"
+    editorPluginID="org.ofbiz.plugin.editor">
+  <foreignModel>ofbiz.ecore</foreignModel>
+  <genPackages prefix="Ofbiz" basePackage="org.ofbiz.plugin" disposableProviderFactory="true"
+      ecorePackage="ofbiz.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ofbiz.ecore#//ServiceMode">
+      <genEnumLiterals ecoreEnumLiteral="ofbiz.ecore#//ServiceMode/IN"/>
+      <genEnumLiterals ecoreEnumLiteral="ofbiz.ecore#//ServiceMode/OUT"/>
+      <genEnumLiterals ecoreEnumLiteral="ofbiz.ecore#//ServiceMode/INOUT"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ofbiz.ecore#//Include">
+      <genEnumLiterals ecoreEnumLiteral="ofbiz.ecore#//Include/all"/>
+      <genEnumLiterals ecoreEnumLiteral="ofbiz.ecore#//Include/pk"/>
+      <genEnumLiterals ecoreEnumLiteral="ofbiz.ecore#//Include/nonpk"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="ofbiz.ecore#//IFile"/>
+    <genDataTypes ecoreDataType="ofbiz.ecore#//IFolder"/>
+    <genDataTypes ecoreDataType="ofbiz.ecore#//IJavaProject"/>
+    <genDataTypes ecoreDataType="ofbiz.ecore#//IProject"/>
+    <genClasses ecoreClass="ofbiz.ecore#//Attribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Attribute/mode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Attribute/optional"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Attribute/service"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//Component">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/services"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/directory"/>
+      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
+          ecoreFeature="ecore:EReference ofbiz.ecore#//Component/entities"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/dependsOn"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/webapps"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/screens"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//Directory">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Directory/components"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Directory/project"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//Entity"/>
+    <genClasses ecoreClass="ofbiz.ecore#//EntityRef">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//EntityRef/mode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//EntityRef/include"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//EntityRef/optional"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//EntityRef/exlude"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ofbiz.ecore#//EntityRef/service"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute ofbiz.ecore#//EntityRef/entity"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//ExtendEntity"/>
+    <genClasses ecoreClass="ofbiz.ecore#//Field">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Field/pk"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Field/entity"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//FolderElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//FolderElement/folder"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//IEntity">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ofbiz.ecore#//IEntity/component"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//IEntity/fields"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//NamedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//NamedElement/name"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//Project">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Project/directories"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Project/javaproject"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Project/root"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Project/project"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//Root">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Root/projects"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//Service">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Service/engine"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Service/location"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Service/invoke"/>
+      <genFeatures property="None" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Service/attributes"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Service/component"/>
+      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
+          ecoreFeature="ecore:EReference ofbiz.ecore#//Service/implements"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Service/autoAttributes"/>
+      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
+          ecoreFeature="ecore:EReference ofbiz.ecore#//Service/derived"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Service/entity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Service/extends"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Service/serviceInvocations"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//TypedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//TypedElement/type"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//ViewEntity"/>
+    <genClasses ecoreClass="ofbiz.ecore#//Screen">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Screen/component"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Screen/actions"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//Action">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Action/screen"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//Controller">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Controller/component"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Controller/webapp"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Controller/requestMaps"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Controller/viewMaps"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//RequestMap">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//RequestMap/controller"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//RequestMap/securityHttps"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//RequestMap/securityAuth"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//RequestMap/responses"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//RequestMap/event"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//RequestMap/requestUri"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="ofbiz.ecore#//AbstractResponse">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//AbstractResponse/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//AbstractResponse/value"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//AbstractResponse/requestMap"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="ofbiz.ecore#//DescribedElement">
+      <genFeatures createChild="false" propertyMultiLine="true" ecoreFeature="ecore:EAttribute ofbiz.ecore#//DescribedElement/description"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//HTMLTemplate">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HTMLTemplate/templateFileName"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//WebApp">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//WebApp/uri"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//WebApp/controller"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//WebApp/component"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="ofbiz.ecore#//AbstractEvent">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//AbstractEvent/requestMap"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//ServiceEvent"/>
+    <genClasses ecoreClass="ofbiz.ecore#//RequestUri">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//RequestUri/requestmap"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//DummyEvent"/>
+    <genClasses ecoreClass="ofbiz.ecore#//ServiceInvocation">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//ServiceInvocation/service"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//ServiceInvocation/lookUpKey"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//ViewResponse">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//ViewResponse/abstractViewMap"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="ofbiz.ecore#//AbstractViewMap">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//AbstractViewMap/controller"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//AbstractViewMap/viewName"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//AbstractViewMap/viewResponses"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//FtlViewMap"/>
+    <genClasses ecoreClass="ofbiz.ecore#//ScreenViewMap"/>
+    <genClasses image="false" ecoreClass="ofbiz.ecore#//HasUrl">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HasUrl/url"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="ofbiz.ecore#//HasXmlDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HasXmlDefinition/markerKey"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HasXmlDefinition/file"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HasXmlDefinition/hyperlinkKey"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HasXmlDefinition/hyperlinkText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HasXmlDefinition/searchScropeKeyword"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="ofbiz.ecore#//HasDocumentation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HasDocumentation/documentation"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
