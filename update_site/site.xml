@@ -3,7 +3,7 @@
    <description name="Ofbiz plugin">
       Ofbiz plugin for Eclipse
    </description>
-   <feature url="features/dk.itu.smartemf.ofbiz_1.0.3.jar" id="dk.itu.smartemf.ofbiz" version="1.0.3">
+   <feature url="features/dk.itu.smartemf.ofbiz_1.0.4.jar" id="dk.itu.smartemf.ofbiz" version="1.0.4">
       <category name="ofbiz_plugin"/>
    </feature>
    <category-def name="ofbiz_plugin" label="Ofbiz plugin">
