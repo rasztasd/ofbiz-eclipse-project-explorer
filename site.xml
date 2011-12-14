@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="This is a Ofbiz plugin for Eclipse" url="https://github.com/rasztasd/ofbiz-eclipse-project-explorer">
+      This plugin helps you to develop on the Ofbiz framework. It has a graphical overview of the Eclipse project components. It has hyperlinks for controller.xml, screens, forms and many more file types.
+   </description>
+   <feature url="features/org.ofbiz.plugin.feature_1.0.1.jar" id="org.ofbiz.plugin.feature" version="1.0.1">
+      <category name="Ofbiz"/>
+   </feature>
+   <category-def name="Ofbiz" label="Ofbiz plugin"/>
+</site>
