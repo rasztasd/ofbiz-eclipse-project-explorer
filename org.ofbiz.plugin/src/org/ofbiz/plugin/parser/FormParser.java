@@ -52,6 +52,7 @@ public class FormParser extends Parser {
 		currentForm.setFile(file);
 		String markerKey = "screenfile";
 		currentForm.setMarkerKey(markerKey);
+		currentForm.setNameToShow(screenUrl);
 		createMarker(1, markerKey);
 		currentForm.setName(screenUrl);
 	}
@@ -79,6 +80,7 @@ public class FormParser extends Parser {
 			String markerKey = "form_" + name;
 			form.setMarkerKey(markerKey);
 			form.setFormFile(currentForm);
+			form.setNameToShow(currentForm.getNameToShow() + "#" + name);
 			createMarker(xpp.getLineNumber(), markerKey);
 		}
 	}

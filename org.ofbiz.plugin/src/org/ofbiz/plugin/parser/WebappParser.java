@@ -50,6 +50,7 @@ public class WebappParser extends Parser {
 		controller = OfbizFactory.eINSTANCE.createController();
 		String markerKey = webApp.getName();
 		controller.setMarkerKey(markerKey);
+		controller.setName(uri);
 		controller.setFile(file);
 		controller.setComponent(component);
 		controller.setUri(uri);
@@ -81,6 +82,7 @@ public class WebappParser extends Parser {
 			curRequestMap.setUrl(requestUriString);
 			createMarker(xpp.getLineNumber(), requestUriString);
 			curRequestMap.setMarkerKey(requestUriString);
+			curRequestMap.setNameToShow(requestUriString);
 			curRequestMap.setHyperlinkKey(uri);
 			curRequestMap.setHyperlinkText("Request map: " + requestUriString);
 			curRequestMap.setFile(file);
@@ -190,7 +192,6 @@ public class WebappParser extends Parser {
 			abstractViewMap.setMarkerKey(markerKey);
 			abstractViewMap.setHyperlinkKey(viewMapName);
 			abstractViewMap.setFile(file);
-			abstractViewMap.setSearchScropeKeyword(component.getName()+webApp.getName());
 			controller.getViewMaps().add(abstractViewMap);
 			List<ViewResponse> viewResponses = viewResponsesByValue.get(viewMapName);		
 			if (viewResponses != null) {

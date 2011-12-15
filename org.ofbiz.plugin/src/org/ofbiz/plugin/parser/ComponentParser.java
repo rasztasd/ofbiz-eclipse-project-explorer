@@ -68,6 +68,7 @@ public class ComponentParser extends Parser {
 	public void addMarker() {
 		String markerKey = "component_" + component.getName();
 		component.setMarkerKey(markerKey);
+		component.setNameToShow(component.getName());
 		createMarker(1, markerKey);
 	}
 
@@ -113,6 +114,7 @@ public class ComponentParser extends Parser {
 				classpathEntry.setComponent(component);
 				String markerKey = location;
 				classpathEntry.setMarkerKey(markerKey);
+				classpathEntry.setNameToShow(location);
 				classpathEntry.setFile(file);
 				createMarker(xpp.getLineNumber(), markerKey);
 			}

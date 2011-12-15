@@ -109,6 +109,7 @@ public class ServiceParser extends Parser {
 		String markerKey = component.getName() + curService.getName();
 		createMarker(xpp.getLineNumber(), markerKey);
 		curService.setMarkerKey(markerKey);
+		curService.setNameToShow(curService.getName());
 		curService.setFile(file);
 		String location = xpp.getAttributeValue(null, "location");
 		if(location!=null) 

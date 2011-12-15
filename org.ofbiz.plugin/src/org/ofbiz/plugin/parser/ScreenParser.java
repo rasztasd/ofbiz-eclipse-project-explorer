@@ -58,6 +58,7 @@ public class ScreenParser extends Parser {
 		currentScreenFile.setFile(file);
 		String markerKey = "screenfile";
 		currentScreenFile.setMarkerKey(markerKey);
+		currentScreenFile.setNameToShow(screenUrl);
 		createMarker(1, markerKey);
 		currentScreenFile.setName(screenUrl);
 	}
@@ -112,6 +113,7 @@ public class ScreenParser extends Parser {
 		curScreen.setFile(file);
 		String markerKey = curScreen.getName();
 		curScreen.setMarkerKey(markerKey);
+		curScreen.setNameToShow(currentScreenFile.getNameToShow()  + "#" + curScreen.getName());
 		/*curScreen.setEngine(xpp.getAttributeValue(null, "engine"));
 		String location = xpp.getAttributeValue(null, "location");
 		if(location!=null)

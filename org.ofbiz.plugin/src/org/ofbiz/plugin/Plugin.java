@@ -38,7 +38,7 @@ public class Plugin extends AbstractUIPlugin {
 	PROBLEM_MARKER = "org.ofbiz.plugin.model.problem";
 	
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.ofbiz.plugin.model";
+	public static final String PLUGIN_ID = "org.ofbiz.plugin";
 
 	// The shared instance
 	private static Plugin plugin;

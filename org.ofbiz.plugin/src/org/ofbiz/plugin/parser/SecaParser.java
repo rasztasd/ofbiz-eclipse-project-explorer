@@ -17,6 +17,7 @@ public class SecaParser extends Parser {
 				createSeca.setName(xpp.getAttributeValue(null, "event"));
 				String markerKey = "Seca" + service.getName() + i++;
 				createSeca.setMarkerKey(markerKey);
+				createSeca.setNameToShow(service.getName());
 				createSeca.setFile(file);
 				createMarker(xpp.getLineNumber(), markerKey);
 				service.getSecas().add(createSeca);

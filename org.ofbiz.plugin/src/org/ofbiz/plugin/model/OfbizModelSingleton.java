@@ -2,15 +2,21 @@ package org.ofbiz.plugin.model;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.ofbiz.plugin.Plugin;
 import org.ofbiz.plugin.ofbiz.Component;
+import org.ofbiz.plugin.ofbiz.HasXmlDefinition;
 import org.ofbiz.plugin.ofbiz.Project;
+import org.ofbiz.plugin.ofbiz.util.OfbizSwitch;
 
 public class OfbizModelSingleton {
 	private static OfbizModelSingleton instance = new OfbizModelSingleton();
@@ -60,5 +66,28 @@ public class OfbizModelSingleton {
 			return file;
 		}
 		return null;
+	}
+	public Set<HasXmlDefinition> getAllFilesWithXmlDefinitions() {
+		Set<HasXmlDefinition> xmlDefinitions = new HashSet<HasXmlDefinition>();
+		OfbizSwitch<HasXmlDefinition> ofbizSwitch = new OfbizSwitch<HasXmlDefinition>() {
+
+			@Override
+			public HasXmlDefinition caseHasXmlDefinition(
+					HasXmlDefinition object) {
+				return object;
+			}
+			
+		};
+		for (Project project : getAllProjects()) {
+			TreeIterator<EObject> eAllContents = project.eAllContents();
+			while (eAllContents.hasNext()) {
+				EObject eObject = eAllContents.next();
+				HasXmlDefinition doSwitch = ofbizSwitch.doSwitch(eObject);
+				if (doSwitch != null) {
+					xmlDefinitions.add(doSwitch);
+				}
+			}
+		}
+		return xmlDefinitions;
 	}
 }

@@ -207,6 +207,11 @@
            id="org.ofbiz.plugin.commands.serviceInvocationCommand"
            name="Insert service invocation">
      </command>
+     <command
+           categoryId="org.ofbiz.plugin.commands.category"
+           id="org.ofbiz.plugin.commands.openXmlDefinitionCommand"
+           name="Open Ofbiz file">
+     </command>
   </extension>
   <extension
         point="org.eclipse.ui.handlers">
@@ -218,6 +223,10 @@
            class="org.ofbiz.plugin.handlers.ServiceInvocationHandler"
            commandId="org.ofbiz.plugin.commands.serviceInvocationCommand">
      </handler>
+	<handler
+           class="org.ofbiz.plugin.handlers.opencomponent.OpenOfbizComponentDialogHandler"
+           commandId="org.ofbiz.plugin.commands.openXmlDefinitionCommand">
+     </handler>     
   </extension>
   <extension
         point="org.eclipse.ui.bindings">
@@ -228,10 +237,10 @@
            sequence="M1+6">
      </key>
      <key
-           commandId="org.ofbiz.plugin.commands.serviceInvocationCommand"
+           commandId="org.ofbiz.plugin.commands.openXmlDefinitionCommand"
            contextId="org.eclipse.ui.contexts.window"
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-           sequence="M1+M3+S">
+           sequence="M1+M3+X">
      </key>
   </extension>
   <extension
@@ -252,6 +261,11 @@
                  id="org.ofbiz.plugin.menus.serviceInvocationCommand"
                  mnemonic="S">
            </command>
+           <command
+                 commandId="org.ofbiz.plugin.commands.openXmlDefinitionCommand"
+                 id="org.ofbiz.plugin.menus.openXmlDefinitionCommand"
+                 mnemonic="X">
+           </command>           
         </menu>
      </menuContribution>
      <menuContribution

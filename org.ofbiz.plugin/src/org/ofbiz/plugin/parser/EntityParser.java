@@ -96,6 +96,7 @@ public class EntityParser extends Parser {
 		}
 		if (createMarker != null) {
 			current.setMarkerKey(markerKey);
+			current.setNameToShow(current.getName());
 			current.setHyperlinkKey(current.getName());
 			current.setHyperlinkText("Entity ");
 			current.setFile(file);
