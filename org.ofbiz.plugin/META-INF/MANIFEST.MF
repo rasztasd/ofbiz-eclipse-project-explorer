@@ -2,15 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OFBiz IDE Plugin
 Bundle-SymbolicName: org.ofbiz.plugin;singleton:=true
-Bundle-Version: 1.1.1
+Bundle-Version: 1.0.14
 Bundle-Activator: org.ofbiz.plugin.Plugin
 Bundle-Vendor: Daniel McAllister
 Require-Bundle: org.eclipse.jface.text;visibility:=reexport,
  org.eclipse.core.runtime;visibility:=reexport,
- org.eclipse.emf.edit.ui;visibility:=reexport,
  org.eclipse.core.resources;visibility:=reexport,
  org.eclipse.jdt.core;visibility:=reexport,
- org.eclipse.emf.ecore.xmi;visibility:=reexport,
  org.eclipse.ui.ide;visibility:=reexport,
  org.eclipse.ui,
  org.eclipse.ui.editors,
@@ -18,24 +16,13 @@ Require-Bundle: org.eclipse.jface.text;visibility:=reexport,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.jdt.apt.ui;bundle-version="3.3.200",
  org.eclipse.ui.forms;bundle-version="3.4.1",
- org.eclipse.wst.sse.core;bundle-version="1.1.402"
+ org.eclipse.wst.sse.core;bundle-version="1.1.402",
+ org.eclipse.emf.common;visibility:=reexport,
+ org.eclipse.emf.edit.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: bsh,
  javax.xml.namespace,
- org.eclipse.emf.ecore,
- org.eclipse.emf.ecore.impl,
- org.eclipse.emf.ecore.plugin,
- org.eclipse.emf.ecore.resource,
- org.eclipse.emf.ecore.resource.impl,
- org.eclipse.emf.ecore.util,
- org.eclipse.emf.ecore.xml.namespace,
- org.eclipse.emf.ecore.xml.namespace.impl,
- org.eclipse.emf.ecore.xml.namespace.util,
- org.eclipse.emf.ecore.xml.type,
- org.eclipse.emf.ecore.xml.type.impl,
- org.eclipse.emf.ecore.xml.type.internal,
- org.eclipse.emf.ecore.xml.type.util,
  org.ofbiz.plugin;
   uses:="org.eclipse.emf.ecore,
    org.eclipse.jdt.core,
