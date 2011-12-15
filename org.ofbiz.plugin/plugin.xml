@@ -11,7 +11,7 @@
       <view
             category="org.ofbiz.plugin.category"
             class="org.ofbiz.plugin.ExplorerView"
-            icon="icons/refresh.gif"
+            icon="icons/ofbiz.png"
             id="org.ofbiz.plugin.explorerview"
             name="OFBiz Explorer">
       </view>
