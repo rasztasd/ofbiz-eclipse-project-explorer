@@ -12,6 +12,9 @@
    <feature url="features/org.ofbiz.plugin.feature_1.0.3.jar" id="org.ofbiz.plugin.feature" version="1.0.3">
       <category name="Ofbiz"/>
    </feature>
+   <feature url="features/org.ofbiz.plugin.feature_1.0.4.jar" id="org.ofbiz.plugin.feature" version="1.0.4">
+      <category name="Ofbiz"/>
+   </feature>
    <category-def name="Ofbiz" label="Ofbiz plugin">
       <description>
          -Beanshell, Controller.xml, Screen, Form hyperlinks (Press Ctrl+Click or F3 on a valid Ofbiz Item)
