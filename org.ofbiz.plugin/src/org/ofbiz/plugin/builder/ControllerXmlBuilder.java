@@ -29,6 +29,8 @@ import org.ofbiz.plugin.parser.WebappParser;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import bsh.BshBuilder;
+
 public class ControllerXmlBuilder extends IncrementalProjectBuilder {
 
 	class SampleDeltaVisitor implements IResourceDeltaVisitor {
@@ -69,6 +71,8 @@ public class ControllerXmlBuilder extends IncrementalProjectBuilder {
 					checkControllerXml(resource);
 					break;
 				}
+			} else if (resource.getName().endsWith(".bsh")) {
+				new BshBuilder((IFile) resource);
 			}
 			//return true to continue visiting children.
 			return true;
