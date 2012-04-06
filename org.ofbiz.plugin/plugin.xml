@@ -67,6 +67,35 @@
   </extension>
   <extension
         point="org.eclipse.ui.popupMenus">
+              <!-- remove nature -->
+      <objectContribution
+            id="org.ofbiz.plugin.builder.removeNature"
+            objectClass="org.eclipse.core.resources.IProject">
+         <action
+               class="org.ofbiz.plugin.builder.ToggleNatureAction"
+               enablesFor="1"
+               id="org.ofbiz.plugin.builder.removeNature"
+               label="Remove Ofbiz project"
+               tooltip="Remove Ofbiz project">
+         </action>
+         <visibility><objectState name="projectNature" value="org.ofbiz.plugin.builder.ControllerXmlNature"/></visibility>
+      </objectContribution>
+      
+      
+      <!-- add nature -->
+      <objectContribution
+            id="org.ofbiz.plugin.builder.addNature"
+            objectClass="org.eclipse.core.resources.IProject">
+         <action
+               class="org.ofbiz.plugin.builder.ToggleNatureAction"
+               enablesFor="1"
+               id="org.ofbiz.plugin.builder.addNature"
+               label="Set project as Ofbiz project"
+               tooltip="Set project as Ofbiz project">
+         </action>
+         <visibility><not><objectState name="projectNature" value="org.ofbiz.plugin.builder.ControllerXmlNature"/></not></visibility>
+      </objectContribution>
+        
      <objectContribution
            id="org.ofbiz.plugin.serviceinvocation"
            objectClass="org.ofbiz.plugin.ofbiz.ServiceInvocation">
