@@ -70,30 +70,32 @@
               <!-- remove nature -->
       <objectContribution
             id="org.ofbiz.plugin.builder.removeNature"
-            objectClass="org.eclipse.core.resources.IProject">
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true">
          <action
-               class="org.ofbiz.plugin.builder.ToggleNatureAction"
+               class="org.ofbiz.plugin.nature.ToggleNatureAction"
                enablesFor="1"
                id="org.ofbiz.plugin.builder.removeNature"
                label="Remove Ofbiz project"
-               tooltip="Remove Ofbiz project">
+               tooltip="Remove Ofbiz project"
+               menubarPath="additions">
          </action>
-         <visibility><objectState name="projectNature" value="org.ofbiz.plugin.builder.ControllerXmlNature"/></visibility>
+         <visibility><objectState name="projectNature" value="org.ofbiz.plugin.ofbizNature"/></visibility>
       </objectContribution>
-      
-      
       <!-- add nature -->
       <objectContribution
             id="org.ofbiz.plugin.builder.addNature"
-            objectClass="org.eclipse.core.resources.IProject">
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true">
          <action
-               class="org.ofbiz.plugin.builder.ToggleNatureAction"
+               class="org.ofbiz.plugin.nature.ToggleNatureAction"
                enablesFor="1"
                id="org.ofbiz.plugin.builder.addNature"
                label="Set project as Ofbiz project"
-               tooltip="Set project as Ofbiz project">
+               tooltip="Set project as Ofbiz project"
+               menubarPath="additions">
          </action>
-         <visibility><not><objectState name="projectNature" value="org.ofbiz.plugin.builder.ControllerXmlNature"/></not></visibility>
+         <visibility><not><objectState name="projectNature" value="org.ofbiz.plugin.ofbizNature"/></not></visibility>
       </objectContribution>
         
      <objectContribution
@@ -197,19 +199,6 @@
         </action>
      </objectContribution>
      <objectContribution
-           adaptable="true"
-           id="org.ofbiz.plugin.contribution1"
-           nameFilter="*"
-           objectClass="org.eclipse.core.resources.IProject">
-        <action
-              class="org.ofbiz.plugin.nature.ToggleNatureAction"
-              enablesFor="+"
-              id="org.ofbiz.plugin.addRemoveNatureAction"
-              label="Add/Remove Ofbiz Nature"
-              menubarPath="additions">
-        </action>
-     </objectContribution>
-     <objectContribution
            id="org.ofbiz.plugin.viewEntitySql"
            objectClass="org.ofbiz.plugin.ofbiz.ViewEntity">
         <action
@@ -220,6 +209,7 @@
               tooltip="Show sql.">
         </action>
      </objectContribution>
+     
   </extension>
    
   <extension

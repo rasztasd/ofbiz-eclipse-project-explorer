@@ -1,6 +1,6 @@
 package org.ofbiz.plugin.builder;
 
-import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import javax.xml.parsers.SAXParserFactory;
@@ -16,20 +16,21 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.ofbiz.plugin.LoadOperation;
 import org.ofbiz.plugin.Plugin;
 import org.ofbiz.plugin.model.ControllerHelper;
 import org.ofbiz.plugin.model.OfbizModelSingleton;
 import org.ofbiz.plugin.model.ScreenHelper;
 import org.ofbiz.plugin.model.ServiceHelper;
 import org.ofbiz.plugin.nature.OfbizNature;
-import org.ofbiz.plugin.ofbiz.Component;
 import org.ofbiz.plugin.ofbiz.Controller;
+import org.ofbiz.plugin.ofbiz.OfbizFactory;
 import org.ofbiz.plugin.ofbiz.Project;
 import org.ofbiz.plugin.ofbiz.Screen;
 import org.ofbiz.plugin.parser.Parser;
-import org.ofbiz.plugin.parser.WebappParser;
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import bsh.BshBuilder;
 
@@ -44,6 +45,7 @@ public class OfbizBuilder extends IncrementalProjectBuilder {
 		public boolean visit(IResourceDelta delta) throws CoreException {
 			IResource resource = delta.getResource();
 			if (resource instanceof IFile) {
+				
 				//				Project project = OfbizModelSingleton.get().findProjectByEclipseProjectName(resource.getProject().getName());
 				//				IFile file = (IFile) delta.getResource();
 				//				Controller controller = ControllerHelper.getController(file);
@@ -69,12 +71,14 @@ public class OfbizBuilder extends IncrementalProjectBuilder {
 				//					checkControllerXml(resource);
 				//					break;
 				case IResourceDelta.CHANGED:
+					if (resource.getName().endsWith(".bsh")) {
+						new BshBuilder((IFile) resource);
+					}
 					// handle changed resource
 //					checkControllerXml(resource);
 					break;
 				}
-			} else if (resource.getName().endsWith(".bsh")) {
-				new BshBuilder((IFile) resource);
+//				case IResourceDelta.:
 			}
 			//return true to continue visiting children.
 			return true;
@@ -212,10 +216,26 @@ public class OfbizBuilder extends IncrementalProjectBuilder {
 
 	protected void fullBuild(final IProgressMonitor monitor)
 			throws CoreException {
-		try {
-			getProject().accept(new ControllerXmlVisitor());
-		} catch (CoreException e) {
-		}
+//		try {
+			IProject project = getProject();
+			Project ofbizProject = OfbizModelSingleton.get().findProjectByEclipseProjectName(project.getName());
+			if (ofbizProject == null) {
+				ofbizProject = OfbizFactory.eINSTANCE.createProject();
+				OfbizModelSingleton.get().addProject(project.getName(), ofbizProject);
+			}
+			LoadOperation loadOperation = new LoadOperation(ofbizProject);
+			try {
+				loadOperation.run(new ProgressMonitorDialog(new Shell()).getProgressMonitor());
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+//			project.accept(new ControllerXmlVisitor());
+//		} catch (CoreException e) {
+//		}
 	}
 
 	protected void incrementalBuild(IResourceDelta delta,

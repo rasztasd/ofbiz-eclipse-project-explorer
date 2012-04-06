@@ -8,8 +8,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.ofbiz.plugin.model.ComponentHelper;
+import org.ofbiz.plugin.model.ControllerHelper;
+import org.ofbiz.plugin.model.OfbizModelSingleton;
+import org.ofbiz.plugin.nature.OfbizNature;
 import org.ofbiz.plugin.ofbiz.AbstractEvent;
 import org.ofbiz.plugin.ofbiz.AbstractResponse;
 import org.ofbiz.plugin.ofbiz.AbstractViewMap;
@@ -18,6 +23,7 @@ import org.ofbiz.plugin.ofbiz.Controller;
 import org.ofbiz.plugin.ofbiz.DummyEvent;
 import org.ofbiz.plugin.ofbiz.FtlViewMap;
 import org.ofbiz.plugin.ofbiz.OfbizFactory;
+import org.ofbiz.plugin.ofbiz.Project;
 import org.ofbiz.plugin.ofbiz.RequestMap;
 import org.ofbiz.plugin.ofbiz.ScreenViewMap;
 import org.ofbiz.plugin.ofbiz.Service;
@@ -47,8 +53,17 @@ public class WebappParser extends Parser {
 	 */
 	private Map<String, List<ViewResponse>> viewResponsesByValue = new HashMap<String, List<ViewResponse>>();
 
-	public WebappParser(Component component, String uri, IFile file, WebApp webApp, Controller referencingController) {
+	public WebappParser(Component component, String uri, IFile file, WebApp webApp, Controller referencingController) throws CoreException {
 		this.file = file;
+		IProject project = file.getProject();
+		project.getNature(OfbizNature.ID);
+		Project findProjectByEclipseProjectName = OfbizModelSingleton.get().findProjectByEclipseProjectName(project.getName());
+		Controller controller2 = ControllerHelper.getController(file);
+		if (controller2 != null) {
+			controller2.setWebapp(null);
+			controller2.setReferencedWebapp(null);
+		}
+		
 		this.referencingController = referencingController;
 
 		controller = OfbizFactory.eINSTANCE.createController();

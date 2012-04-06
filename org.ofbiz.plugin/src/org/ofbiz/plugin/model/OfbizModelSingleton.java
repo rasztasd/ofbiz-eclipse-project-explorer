@@ -94,4 +94,5 @@ public class OfbizModelSingleton {
 		}
 		return xmlDefinitions;
 	}
+//	public EObject get
 }

@@ -18,8 +18,11 @@ import org.ofbiz.plugin.parser.GoToFile;
 
 public class ControllerHelper {
 	public static Controller getController(final IFile file) {
-		List<HyperlinkMarker> retValue = new ArrayList<HyperlinkMarker>();
 		Project project = OfbizModelSingleton.get().findProjectByEclipseProjectName(file.getProject().getName());
+		return getController(file, project);
+	}
+	public static Controller getController(final IFile file, Project project) {
+		List<HyperlinkMarker> retValue = new ArrayList<HyperlinkMarker>();
 		TreeIterator<EObject> eAllContents = project.eAllContents();
 		while (eAllContents.hasNext()) {
 			EObject eObject = eAllContents.next();

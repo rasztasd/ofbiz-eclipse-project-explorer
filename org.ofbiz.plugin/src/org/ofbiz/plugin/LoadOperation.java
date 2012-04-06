@@ -69,19 +69,14 @@ import org.xmlpull.v1.XmlPullParserException;
 
 public class LoadOperation extends WorkspaceModifyOperation {
 
-	private final Root root;
 	private Map<String, Service> serviceByName;
 	private Set<String> alreadyParsedJavaFiles = new HashSet<String>();
 	private List<String> screensToParse = new ArrayList<String>();
 	private List<IFile> secasToParse = new ArrayList<IFile>();
+	private Project project;
 
-	public LoadOperation(ExplorerView view) {
-		this(view.getRoot());
-	}
-
-	public LoadOperation(Root root) {
-		assert root != null;
-		this.root = root;
+	public LoadOperation(Project project) {
+		this.project = project;
 	}
 
 	@Override
@@ -91,27 +86,16 @@ public class LoadOperation extends WorkspaceModifyOperation {
 		monitor.beginTask("load OFBiz projects:", IProgressMonitor.UNKNOWN);
 
 		// clear
+		project.eContents().clear();
 
-		root.getProjects().clear();
-		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
-		wsRoot.deleteMarkers(Plugin.TEXT_MARKER, true, IResource.DEPTH_INFINITE);
-		wsRoot.deleteMarkers(Plugin.PROBLEM_MARKER, true, IResource.DEPTH_INFINITE);
 		monitor.worked(1);
 
 		// load open OFBiz projects
-
-		for(IProject project : wsRoot.getProjects()) {
-			if (!project.isOpen()) {
-				continue;
-			}
-			if (isOfbizProject(project)) {
-				load(project,monitor);
-			} else {
-			}
-		}
+		load(project.getProject(),monitor);
 
 		monitor.done();
-	}
+
+	}		
 
 	private void load(IProject project, IProgressMonitor monitor) {
 
@@ -230,9 +214,9 @@ public class LoadOperation extends WorkspaceModifyOperation {
 			}
 
 		}
-		
+
 		//Parse SECAs
-		
+
 		for (IFile secaFile : secasToParse) {
 			SecaParser secaParser = new SecaParser();
 			XmlPullParser xpp;
@@ -246,8 +230,6 @@ public class LoadOperation extends WorkspaceModifyOperation {
 		}
 
 		// everything is ok so we can add the loaded project to the root
-
-		ofbizProject.setRoot(root);
 
 		//find all service usage
 		//		findServiceUsage(ofbizProject);
@@ -326,19 +308,20 @@ public class LoadOperation extends WorkspaceModifyOperation {
 	}
 
 	private Service getServiceByName(String name) {
-		if (serviceByName == null) {
-			serviceByName = new HashMap<String, Service>();
-			for (Project project : root.getProjects()) {
-				for (Directory directory : project.getDirectories()) {
-					for (Component component : directory.getComponents()) {
-						for (Service service : component.getServices()) {
-							serviceByName.put(service.getName(), service);
-						}
-					}
-				}
-			}
-		}
-		return serviceByName.get(name);
+//		if (serviceByName == null) {
+//			serviceByName = new HashMap<String, Service>();
+//			for (Project project : root.getProjects()) {
+//				for (Directory directory : project.getDirectories()) {
+//					for (Component component : directory.getComponents()) {
+//						for (Service service : component.getServices()) {
+//							serviceByName.put(service.getName(), service);
+//						}
+//					}
+//				}
+//			}
+//		}
+//		return serviceByName.get(name);
+		return null;
 	}
 
 	private void load(Directory directory,IProgressMonitor monitor) {

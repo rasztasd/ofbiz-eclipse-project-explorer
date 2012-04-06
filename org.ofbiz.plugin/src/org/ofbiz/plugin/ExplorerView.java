@@ -63,6 +63,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.ofbiz.plugin.analysis.Analysis;
+import org.ofbiz.plugin.model.OfbizModelSingleton;
 import org.ofbiz.plugin.ofbiz.Attribute;
 import org.ofbiz.plugin.ofbiz.Component;
 import org.ofbiz.plugin.ofbiz.Directory;
