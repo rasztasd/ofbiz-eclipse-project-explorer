@@ -8,6 +8,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
@@ -20,6 +21,7 @@ import org.ofbiz.plugin.model.ControllerHelper;
 import org.ofbiz.plugin.model.OfbizModelSingleton;
 import org.ofbiz.plugin.model.ScreenHelper;
 import org.ofbiz.plugin.model.ServiceHelper;
+import org.ofbiz.plugin.nature.OfbizNature;
 import org.ofbiz.plugin.ofbiz.Component;
 import org.ofbiz.plugin.ofbiz.Controller;
 import org.ofbiz.plugin.ofbiz.Project;
@@ -29,7 +31,7 @@ import org.ofbiz.plugin.parser.WebappParser;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-public class ControllerXmlBuilder extends IncrementalProjectBuilder {
+public class OfbizBuilder extends IncrementalProjectBuilder {
 
 	class SampleDeltaVisitor implements IResourceDeltaVisitor {
 		/*
@@ -39,34 +41,34 @@ public class ControllerXmlBuilder extends IncrementalProjectBuilder {
 		 */
 		public boolean visit(IResourceDelta delta) throws CoreException {
 			IResource resource = delta.getResource();
-			if (resource instanceof IFile && resource.getName().endsWith("controller.xml")) {
-//				Project project = OfbizModelSingleton.get().findProjectByEclipseProjectName(resource.getProject().getName());
-//				IFile file = (IFile) delta.getResource();
-//				Controller controller = ControllerHelper.getController(file);
-//				String uri = controller.getUri();
-//				Component component = controller.getComponent();
-//				controller.getWebapp().setComponent(null);
-//				controller.setWebapp(null);
-//				WebappParser webAppParser = new WebappParser(component, uri, file);
-//				try {
-//					XmlPullParser xpp = Plugin.getDefault().getXmlPullParserPool().getPullParserFromPool();
-//					webAppParser.processDocument(xpp, file);
-//				} catch (XmlPullParserException e) {
-//				} catch (IOException e) {
-//				}
+			if (resource instanceof IFile) {
+				//				Project project = OfbizModelSingleton.get().findProjectByEclipseProjectName(resource.getProject().getName());
+				//				IFile file = (IFile) delta.getResource();
+				//				Controller controller = ControllerHelper.getController(file);
+				//				String uri = controller.getUri();
+				//				Component component = controller.getComponent();
+				//				controller.getWebapp().setComponent(null);
+				//				controller.setWebapp(null);
+				//				WebappParser webAppParser = new WebappParser(component, uri, file);
+				//				try {
+				//					XmlPullParser xpp = Plugin.getDefault().getXmlPullParserPool().getPullParserFromPool();
+				//					webAppParser.processDocument(xpp, file);
+				//				} catch (XmlPullParserException e) {
+				//				} catch (IOException e) {
+				//				}
 				switch (delta.getKind()) {
-//				case IResourceDelta.SYNC:
-//				case IResourceDelta.ADDED:
-//					// handle added resource
-//					checkControllerXml(resource);
-//					break;
-//				case IResourceDelta.REMOVED:
-//					// handle removed resource
-//					checkControllerXml(resource);
-//					break;
+				//				case IResourceDelta.SYNC:
+				//				case IResourceDelta.ADDED:
+				//					// handle added resource
+				//					checkControllerXml(resource);
+				//					break;
+				//				case IResourceDelta.REMOVED:
+				//					// handle removed resource
+				//					checkControllerXml(resource);
+				//					break;
 				case IResourceDelta.CHANGED:
 					// handle changed resource
-					checkControllerXml(resource);
+//					checkControllerXml(resource);
 					break;
 				}
 			}
@@ -83,7 +85,7 @@ public class ControllerXmlBuilder extends IncrementalProjectBuilder {
 		}
 	}
 
-	public static final String BUILDER_ID = "org.ofbiz.plugin.controllerXmlBuilder";
+	public static final String BUILDER_ID = "org.ofbiz.plugin.builder.OfbizBuilder";
 
 	private static final String MARKER_TYPE = "org.ofbiz.plugin.xmlProblem";
 
@@ -110,7 +112,7 @@ public class ControllerXmlBuilder extends IncrementalProjectBuilder {
 	 *      java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
-	throws CoreException {
+			throws CoreException {
 		if (kind == FULL_BUILD) {
 			fullBuild(monitor);
 		} else {
@@ -125,18 +127,23 @@ public class ControllerXmlBuilder extends IncrementalProjectBuilder {
 	}
 
 	void checkControllerXml(IResource resource) {
-		if (resource instanceof IFile && resource.getName().endsWith("controller.xml")) {
+		if (resource instanceof IFile) {
 			//			OfbizModelSingleton.get().
-			Controller controller = ControllerHelper.getController((IFile) resource);
-			if (controller == null) { //Maybe a parse error for the controller
-				return;
-			}
-			IFile file = (IFile) resource;
-			deleteMarkers(file);
 			try {
-				XmlPullParser xpp = Plugin.getDefault().getXmlPullParserPool().getPullParserFromPool();
-				new ControllerXmlParser(controller).processDocument(xpp, file);
-			} catch (Exception e1) {
+				IProjectNature nature = resource.getProject().getNature(OfbizNature.ID);
+				Controller controller = ControllerHelper.getController((IFile) resource);
+				if (controller == null) { //Maybe a parse error for the controller
+					return;
+				}
+				IFile file = (IFile) resource;
+				deleteMarkers(file);
+				try {
+					XmlPullParser xpp = Plugin.getDefault().getXmlPullParserPool().getPullParserFromPool();
+					new ControllerXmlParser(controller).processDocument(xpp, file);
+				} catch (Exception e1) {
+				}
+			} catch (CoreException e) {
+				return;
 			}
 		}
 	}
@@ -200,7 +207,7 @@ public class ControllerXmlBuilder extends IncrementalProjectBuilder {
 	}
 
 	protected void fullBuild(final IProgressMonitor monitor)
-	throws CoreException {
+			throws CoreException {
 		try {
 			getProject().accept(new ControllerXmlVisitor());
 		} catch (CoreException e) {

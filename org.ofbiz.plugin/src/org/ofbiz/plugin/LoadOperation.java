@@ -45,6 +45,7 @@ import org.ofbiz.plugin.model.ComponentHelper;
 import org.ofbiz.plugin.model.OfbizModelSingleton;
 import org.ofbiz.plugin.ofbiz.AbstractViewMap;
 import org.ofbiz.plugin.ofbiz.Component;
+import org.ofbiz.plugin.ofbiz.Controller;
 import org.ofbiz.plugin.ofbiz.Directory;
 import org.ofbiz.plugin.ofbiz.OfbizFactory;
 import org.ofbiz.plugin.ofbiz.Project;
@@ -455,11 +456,14 @@ public class LoadOperation extends WorkspaceModifyOperation {
 		}
 		secasToParse.addAll(parser.getSecaModels());
 
+		List<WebappModel> listOfWebapps = new ArrayList<WebappModel>();
 		// load webapp models
-		for (final WebappModel webappModel : parser.getWebappModels()) {
+		listOfWebapps.addAll(parser.getWebappModels());
+		while (listOfWebapps.size() > 0) {
+			WebappModel webappModel = listOfWebapps.remove(0);
 			IFile file = webappModel.getiFile();
 			monitor.subTask("load webapp model: "+file.getName());
-			loadWebappModel(component, file, webappModel.getUri());
+			loadWebappModel(component, file, webappModel.getUri(), listOfWebapps, webappModel.getReferencingController());
 			monitor.worked(1);
 		}
 	}
@@ -489,13 +493,23 @@ public class LoadOperation extends WorkspaceModifyOperation {
 	}
 
 
-	private void loadWebappModel(Component component, IFile file, String uri) {
+	private void loadWebappModel(Component component, IFile file, String uri, List<WebappModel> listOfWebapps, Controller referencingController) {
 		try {
-			WebappParser parser = new WebappParser(component, uri, file);
+			WebApp webApp;
+			if (referencingController == null) {
+				webApp = OfbizFactory.eINSTANCE.createWebApp();
+				webApp.setUri(uri);
+				webApp.setName(uri);
+				webApp.setComponent(component);
+			} else {
+				webApp = referencingController.getWebapp();
+			}
+			WebappParser parser = new WebappParser(component, uri, file, webApp, referencingController);
 			XmlPullParser xpp = Plugin.getDefault()
 					.getXmlPullParserPool().getPullParserFromPool();
 			parser.processDocument(xpp, file);
 			screensToParse.addAll(parser.getScreenLocations());
+			listOfWebapps.addAll(parser.getincludeLocations());
 			Plugin.getDefault().getXmlPullParserPool().returnPullParserToPool(xpp);
 		} catch (Exception e) {
 			Plugin.logError("Unable to parse webapp model: "+ file.getName(), e);

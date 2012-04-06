@@ -9,6 +9,8 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.ofbiz.plugin.model.ComponentHelper;
+import org.ofbiz.plugin.ofbiz.AbstractEvent;
 import org.ofbiz.plugin.ofbiz.AbstractResponse;
 import org.ofbiz.plugin.ofbiz.AbstractViewMap;
 import org.ofbiz.plugin.ofbiz.Component;
@@ -22,6 +24,7 @@ import org.ofbiz.plugin.ofbiz.Service;
 import org.ofbiz.plugin.ofbiz.ServiceEvent;
 import org.ofbiz.plugin.ofbiz.ViewResponse;
 import org.ofbiz.plugin.ofbiz.WebApp;
+import org.ofbiz.plugin.parser.model.WebappModel;
 import org.xmlpull.v1.XmlPullParser;
 
 /**
@@ -35,28 +38,34 @@ public class WebappParser extends Parser {
 	private WebApp webApp;
 	private String uri;
 	private Controller controller;
-	private static Set<String> screenLocations = new HashSet<String>();
+	private Set<String> screenLocations = new HashSet<String>();
+	private Set<WebappModel> includeLocations = new HashSet<WebappModel>();
+	private Controller referencingController;
 	/**
 	 * returns the view-response by the value attribute
 	 * its used for matching the responses to the view-maps
 	 */
 	private Map<String, List<ViewResponse>> viewResponsesByValue = new HashMap<String, List<ViewResponse>>();
 
-	public WebappParser(Component component, String uri, IFile file) {
+	public WebappParser(Component component, String uri, IFile file, WebApp webApp, Controller referencingController) {
 		this.file = file;
-		webApp = OfbizFactory.eINSTANCE.createWebApp();
-		webApp.setUri(uri);
-		webApp.setName(uri);
+		this.referencingController = referencingController;
+
 		controller = OfbizFactory.eINSTANCE.createController();
-		String markerKey = webApp.getName();
-		controller.setMarkerKey(markerKey);
-		controller.setName(uri);
 		controller.setFile(file);
 		controller.setComponent(component);
 		controller.setUri(uri);
+		controller.setName(file.getName());
+		if (referencingController == null) {
+			webApp.setController(controller);
+		} else {
+			webApp.getReferencedControllers().add(controller);
+			
+		}
+		controller.setWebapp(webApp);
+		String markerKey = webApp.getName();
 		createMarker(1, markerKey);
-		webApp.setController(controller);
-		component.getWebapps().add(webApp);
+		controller.setMarkerKey(markerKey);
 		this.component = component;
 		this.uri = uri;
 	}
@@ -67,13 +76,26 @@ public class WebappParser extends Parser {
 		}
 		viewResponsesByValue.get(value).add(viewResponse);
 	}
+	
+	public Set<WebappModel> getincludeLocations() {
+		return this.includeLocations;
+	}
 
 	@Override
 	protected void processStartElement(XmlPullParser xpp) {
 		String name = xpp.getName();
-		if (name.equals("request-map")) {
+		if (name.equals("include")) {
+			String location = xpp.getAttributeValue(null, "location");
+			Component componentByUrl = component;
+			if (location.startsWith("component://")) {
+				componentByUrl = ComponentHelper.getComponentByUrl(component.getDirectory().getProject(), location);
+				location = location.substring("component://".length());
+				location = location.substring(location.indexOf("/"));
+			}
+			includeLocations.add(new WebappModel(getResourceFile(location, componentByUrl), location, referencingController==null?controller:referencingController));
+		} else if (name.equals("request-map")) {
 			String uri = xpp.getAttributeValue(null, "uri");
-			String requestUriString = uri + "/control/" + uri;
+			String requestUriString = this.uri + "/control/" + uri;
 			//			requestUri.setName(requestUri);
 			curRequestMap = OfbizFactory.eINSTANCE.createRequestMap();
 			curRequestMap.setSecurityAuth(false);
@@ -87,10 +109,12 @@ public class WebappParser extends Parser {
 			curRequestMap.setHyperlinkText("Request map: " + requestUriString);
 			curRequestMap.setFile(file);
 		} else if (name.equals("event") && curRequestMap != null) {
+			AbstractEvent event = null;
+			String markerKey;
 			if (xpp.getAttributeValue(null, "type").equals("service")) {
 				ServiceEvent serviceEvent = OfbizFactory.eINSTANCE.createServiceEvent();
-				String markerKey = "event" + curRequestMap.getMarkerKey();
-				serviceEvent.setMarkerKey(markerKey);
+				event = serviceEvent;
+				markerKey = "event" + curRequestMap.getMarkerKey();
 				serviceEvent.setFile(file);
 				curRequestMap.setEvent(serviceEvent);
 				String serviceName = xpp.getAttributeValue(null, "invoke"); 
@@ -102,22 +126,24 @@ public class WebappParser extends Parser {
 						serviceEvent.setInvoke(service.getInvoke());
 						serviceEvent.setLocation(service.getLocation());
 						serviceEvent.setName(service.getName());
-						serviceEvent.setRequestMap(curRequestMap);						
+						serviceEvent.setRequestMap(curRequestMap);
+						service.getReference().getReferences().add(serviceEvent);
 						break;
 					}
 				}
 			} else { //TODO implement other type of events like: java
 				DummyEvent dummyEvent = OfbizFactory.eINSTANCE.createDummyEvent();
+				event = dummyEvent;
 				String eventType = xpp.getAttributeValue(null, "type");
 				String eventPath = xpp.getAttributeValue(null, "path");
 				String eventInvoke = xpp.getAttributeValue(null, "invoke");
 				dummyEvent.setName("Type: " + eventType + ", Path: " + eventPath + "," + ", Invoke: " + eventInvoke);
-				String markerKey = "dummy_event" + curRequestMap.getMarkerKey();
-				dummyEvent.setMarkerKey(markerKey);
-				dummyEvent.setFile(file);
-				createMarker(xpp.getLineNumber(), markerKey);
+				markerKey = "dummy_event" + curRequestMap.getMarkerKey();
 				curRequestMap.setEvent(dummyEvent);
 			}
+			event.setMarkerKey(markerKey);
+			event.setFile(file);
+			createMarker(xpp.getLineNumber(), markerKey);
 		} else if (name.equals("security")) {
 			if (curRequestMap == null) {
 				return;

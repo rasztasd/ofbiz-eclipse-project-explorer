@@ -173,11 +173,22 @@
            nameFilter="*"
            objectClass="org.eclipse.core.resources.IProject">
         <action
-              class="org.ofbiz.plugin.builder.ToggleNatureAction"
+              class="org.ofbiz.plugin.nature.ToggleNatureAction"
               enablesFor="+"
               id="org.ofbiz.plugin.addRemoveNatureAction"
               label="Add/Remove Ofbiz Nature"
               menubarPath="additions">
+        </action>
+     </objectContribution>
+     <objectContribution
+           id="org.ofbiz.plugin.viewEntitySql"
+           objectClass="org.ofbiz.plugin.ofbiz.ViewEntity">
+        <action
+              class="org.ofbiz.plugin.action.ShowViewEntitySqlAction"
+              icon="icons/full/obj16/Service.gif"
+              id="org.ofbiz.plugin.actionviewEntitySql"
+              label="Show sql"
+              tooltip="Show sql.">
         </action>
      </objectContribution>
   </extension>
@@ -292,4 +303,153 @@
            value="true">
      </persistent>
   </extension>
+  
+  <extension
+        point="org.eclipse.debug.core.launchConfigurationTypes">
+     <launchConfigurationType
+		name="Beanshell runner"
+        delegate="org.ofbiz.plugin.debugger.BeanshellDebuggerDelegate"
+        modes="run, debug"
+        sourceLocatorId="org.ofbiz.plugin.beanshellSourceLocatorId"
+        sourcePathComputerId="org.eclipse.debug.core.sourcePathComputersId"           
+        id="org.ofbiz.beanshellLauncher">   
+     </launchConfigurationType>
+  </extension>
+  <extension
+        point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+     <launchConfigurationTabGroup
+           class="org.ofbiz.plugin.debugger.BeanshellLaunchConfigurationTabGroup"
+           id="org.ofbiz.beanshellLauncher"
+           type="org.ofbiz.beanshellLauncher">
+     </launchConfigurationTabGroup>
+  </extension>
+<extension point="org.eclipse.ui.editorActions">
+		<editorContribution
+		id="org.python.pydev.debug.BreakpointRulerActions"
+		targetID="org.eclipse.ui.DefaultTextEditor">
+		<action
+			id="org.ofbiz.plugin.debugger.DebugRullerAction"
+			actionID="RulerDoubleClick"
+			label="Add breakpoint"
+			class="org.ofbiz.plugin.debugger.ManageBreakpointRulerActionDelegate">
+		</action>
+	</editorContribution>
+</extension>  
+  <extension
+        point="org.eclipse.debug.core.breakpoints">
+     <breakpoint
+           id="org.ofbiz.plugin.debugger.PDALineBreakpoint"
+           class="org.ofbiz.plugin.debugger.PDALineBreakpoint"
+           markerType="org.ofbiz.plugin.breakpointMarker">
+     </breakpoint>
+   </extension>
+   <extension
+	point="org.eclipse.ui.ide.markerImageProviders">
+	<imageprovider
+       class="org.ofbiz.plugin.debugger.PDALineBreakpoint"
+       icon="icons/breakmarker.gif"
+       id="beanshellBreakPointImage"
+       markertype="org.ofbiz.plugin.breakpointMarker"/>
+  </extension>
+  <extension
+         id="breakpointMarker"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.debug.core.lineBreakpointMarker">
+      </super>
+      <persistent
+            value="false">
+      </persistent>
+  </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            class="org.ofbiz.plugin.debugger.PDABreakpointAdapterFactory"
+            adaptableType="org.eclipse.ui.texteditor.ITextEditor">
+         <adapter
+               type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget">
+         </adapter>
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.sourceLocators">
+      <sourceLocator
+            class="org.ofbiz.plugin.debugger.SourceLookupDirectory"
+            id="org.ofbiz.plugin.beanshellSourceLocatorId"
+            name="name">
+      </sourceLocator>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.debugModelPresentations">
+      <debugModelPresentation
+            class="org.ofbiz.plugin.debugger.DebugModelPresentation"
+            id="org.ofbiz.plugin">
+      </debugModelPresentation>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.sourcePathComputers">
+      <sourcePathComputer
+            class="org.ofbiz.plugin.debugger.SourcePathComputerDelegate"
+            id="org.eclipse.debug.core.sourcePathComputersId">
+      </sourcePathComputer>
+   </extension>
+
+      <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            name="Debugging PDA"
+            description="Debugging PDA"
+            id="org.ofbiz.plugin.debug.contextId"
+            parentId="org.eclipse.debug.ui.debugging">
+      </context>
+   </extension>
+      <extension
+         point="org.eclipse.debug.ui.debugModelContextBindings">
+      <modelContextBinding
+            debugModelId="org.ofbiz.plugin.debugModelPresentation1"
+            contextId="org.ofbiz.plugin.debug.contextId">
+      </modelContextBinding>
+   </extension>
+      <extension
+            point="org.eclipse.jdt.ui.quickAssistProcessors">
+         <quickAssistProcessor
+               id="org.ofbiz.plugin.quickAssistProcessor1"
+               class="org.ofbiz.plugin.assist.JavaQuickAssist"
+               >
+         </quickAssistProcessor>
+      </extension>
+      <extension
+            id="id1"
+            point="org.eclipse.jdt.ui.javaCompletionProposalComputer">
+            <javaCompletionProposalComputer
+                  class="org.ofbiz.plugin.completion.JavaCompletion">
+            </javaCompletionProposalComputer>
+      </extension>
+      <extension
+            point="org.eclipse.jdt.ui.queryParticipants">
+         <queryParticipant
+               class="org.ofbiz.plugin.search.OfbizQueryParticipant"
+               id="org.ofbiz.plugin.queryParticipant1"
+               name="name"
+               nature="org.ofbiz.plugin.ofbizNature">
+         </queryParticipant>
+      </extension>
+      <extension
+            id="org.ofbiz.plugin.ofbizNature"
+            point="org.eclipse.core.resources.natures">
+         <runtime>
+            <run
+                  class="org.ofbiz.plugin.nature.OfbizNature">
+            </run>
+         </runtime>
+      </extension>
+      <extension
+            id="org.ofbiz.plugin.builder.OfbizBuilder"
+            point="org.eclipse.core.resources.builders">
+         <builder>
+         	<run         		
+                class="org.ofbiz.plugin.builder.OfbizBuilder">
+         	</run>
+         </builder>
+      </extension>
 </plugin>

@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.ofbiz.plugin.ofbiz.ClasspathEntry;
 import org.ofbiz.plugin.ofbiz.Component;
 import org.ofbiz.plugin.ofbiz.OfbizFactory;
@@ -32,12 +31,21 @@ import org.xmlpull.v1.XmlPullParser;
 public class ComponentParser extends Parser {
 
 	private static final String ENTITYRESOURCE = "entity-resource",
-			SERVICERESOURCE = "service-resource", TYPE = "type",
-			LOADER = "loader", LOCATION = "location", MODEL = "model",
-			MAIN = "main",
-			WEBAPP = "webapp"	;
+			SERVICERESOURCE = "service-resource"	;
 
-	private final Component component;
+	static final String TYPE = "type";
+
+	static final String LOADER = "loader";
+
+	private static final String LOCATION = "location";
+
+	private static final String MODEL = "model";
+
+	private static final String MAIN = "main";
+
+	static final String WEBAPP = "webapp";
+
+	final Component component;
 
 	private List<IFile> entityModels = new ArrayList<IFile>();
 	private List<IFile> serviceModels = new ArrayList<IFile>();
@@ -82,7 +90,7 @@ public class ComponentParser extends Parser {
 		} else if (xpp.getName().equals(ENTITYRESOURCE)) {
 
 			//TODO: lacks proper error handling if file does not exist
-			IFile file = getResourceFile(xpp);
+			IFile file = getResourceFile(xpp.getAttributeValue(null, "location"), component);
 			if (file != null) {
 				entityModels.add(file);
 			}
@@ -90,7 +98,7 @@ public class ComponentParser extends Parser {
 		} else if (xpp.getName().equals(SERVICERESOURCE)) {
 
 			//TODO: lacks proper error handling if file does not exist
-			IFile file = getResourceFile(xpp);
+			IFile file = getResourceFile(xpp.getAttributeValue(null, "location"), component);
 			if (file != null) {
 				if (xpp.getName().equals(SERVICERESOURCE) && xpp.getAttributeValue(null, "type").equals("eca")) {
 					secaModels.add(file);
@@ -101,9 +109,9 @@ public class ComponentParser extends Parser {
 
 		} else if (xpp.getName().equals(WEBAPP)) {
 			//TODO: lacks proper error handling if file does not exist
-			IFile file = getResourceFile(xpp);
+			IFile file = getResourceFile(xpp.getAttributeValue(null, "location") + "/WEB-INF/controller.xml", component);
 			if (file != null) {
-				webappModels.add(new WebappModel(file, xpp.getAttributeValue(null, "mount-point")));
+				webappModels.add(new WebappModel(file, xpp.getAttributeValue(null, "mount-point"), null));
 			}
 		} else if (xpp.getName().equals("classpath")) {
 			if ("dir".equals(xpp.getAttributeValue(null, "type"))) {
@@ -119,33 +127,5 @@ public class ComponentParser extends Parser {
 				createMarker(xpp.getLineNumber(), markerKey);
 			}
 		}
-	}
-
-	/** retrieves model file for either an entity-resource or a service-resource */
-	private IFile getResourceFile(XmlPullParser xpp) {
-		String type = xpp.getAttributeValue(null, TYPE), loader = xpp
-				.getAttributeValue(null, LOADER);
-		if ((!xpp.getName().equals(WEBAPP)) && type.equals(MODEL) && loader.equals(MAIN)) {
-			String location = xpp.getAttributeValue(null, LOCATION);
-			IResource res = component.getFolder().findMember(location);
-			assert res instanceof IFile;
-			assert res.exists();
-			return (IFile) res;
-		} else if (xpp.getName().equals(WEBAPP)) {
-			String location = xpp.getAttributeValue(null, LOCATION) + "/WEB-INF/controller.xml";
-			IResource res = component.getFolder().findMember(location);
-			if (res != null) {
-				assert res instanceof IFile;
-				assert res.exists();
-			}
-			return (IFile) res;
-		} else if (type.equals("eca")) {
-			String location = xpp.getAttributeValue(null, LOCATION);
-			IResource res = component.getFolder().findMember(location);
-			return (IFile) res;
-		} else {
-			return null;
-		}
-
 	}
 }

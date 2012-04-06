@@ -65,7 +65,7 @@ public class OpenComponentDialog extends FilteredItemsSelectionDialog {
 			@Override
 			public String getText(Object arg0) {
 				if (arg0 == null) {
-					return null;
+					return "sdf";
 				}
 				HasXmlDefinition definition = (HasXmlDefinition) arg0;
 				return definition.getNameToShow();

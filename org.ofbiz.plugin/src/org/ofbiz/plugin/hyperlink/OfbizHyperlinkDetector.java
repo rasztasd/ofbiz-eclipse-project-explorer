@@ -131,9 +131,8 @@ public class OfbizHyperlinkDetector extends AbstractHyperlinkDetector {
 							return null;
 						}
 					}
-				} else if (fileName.equals("controller.xml")) {
-					hyperlinkMarkers = handleControllerXml(selectedWord, file,
-							fileName, doc, offset);
+				} else if (fileName.endsWith("xml") && (hyperlinkMarkers = handleControllerXml(selectedWord, file,
+						fileName, doc, offset)) != null) {
 				} else if(fileName.endsWith(".bsh")) {
 					int lineOfOffset = doc.getLineOfOffset(wordRegion.getOffset());
 					IRegion lineInfo = doc.getLineInformationOfOffset(wordRegion.getOffset());

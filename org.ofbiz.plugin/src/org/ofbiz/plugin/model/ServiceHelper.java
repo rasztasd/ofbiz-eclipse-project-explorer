@@ -69,6 +69,20 @@ public class ServiceHelper {
 		}
 		return retValue;
 	}
+	public static Service getServiceByJavaMethodName(String methodName, String projectName) {
+		Project project = OfbizModelSingleton.get().findProjectByEclipseProjectName(projectName);
+		for (Directory directory : project.getDirectories()) {
+			for (Component component : directory.getComponents()) {
+				for (Service service : component.getServices()) {
+					String invoke = service.getInvoke();
+					if (invoke != null && invoke.equals(methodName)) {
+						return service;
+					}
+				}
+			}
+		}
+		return null;
+	}
 	
 	public static Service isServiceFile(final IFile file) {
 		Project project = OfbizModelSingleton.get().findActiveEclipseProject();

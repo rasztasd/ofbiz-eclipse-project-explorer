@@ -26,11 +26,6 @@ public class GoToFile {
 		gotoLine(entity.getComponent().getFolder(), entity.getName(), "xml");
 		return true;
 	}
-	public static boolean gotoFile(Service service) {
-		gotoLine(service.getComponent().getFolder(), service.getName(), "xml");
-		return true;
-	}
-	
 	public static IMarker getMarker(HasXmlDefinition xmlDefinition) {
 		String markerKey = xmlDefinition.getMarkerKey();
 		IFile file = xmlDefinition.getFile();

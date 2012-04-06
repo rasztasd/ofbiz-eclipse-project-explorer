@@ -1,18 +1,16 @@
-package org.ofbiz.plugin.builder;
+package org.ofbiz.plugin.nature;
 
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
+import org.ofbiz.plugin.builder.OfbizBuilder;
 
-public class ControllerXmlNature implements IProjectNature {
+public class OfbizNature implements IProjectNature {
 
-	/**
-	 * ID of this project nature
-	 */
-	public static final String NATURE_ID = "org.ofbiz.plugin.controllerXmlNature";
-
+	public static String ID = "org.ofbiz.plugin.ofbizNature";
+	
 	private IProject project;
 
 	/*
@@ -25,7 +23,7 @@ public class ControllerXmlNature implements IProjectNature {
 		ICommand[] commands = desc.getBuildSpec();
 
 		for (int i = 0; i < commands.length; ++i) {
-			if (commands[i].getBuilderName().equals(ControllerXmlBuilder.BUILDER_ID)) {
+			if (commands[i].getBuilderName().equals(OfbizBuilder.BUILDER_ID)) {
 				return;
 			}
 		}
@@ -33,7 +31,7 @@ public class ControllerXmlNature implements IProjectNature {
 		ICommand[] newCommands = new ICommand[commands.length + 1];
 		System.arraycopy(commands, 0, newCommands, 0, commands.length);
 		ICommand command = desc.newCommand();
-		command.setBuilderName(ControllerXmlBuilder.BUILDER_ID);
+		command.setBuilderName(OfbizBuilder.BUILDER_ID);
 		newCommands[newCommands.length - 1] = command;
 		desc.setBuildSpec(newCommands);
 		project.setDescription(desc, null);
@@ -48,7 +46,7 @@ public class ControllerXmlNature implements IProjectNature {
 		IProjectDescription description = getProject().getDescription();
 		ICommand[] commands = description.getBuildSpec();
 		for (int i = 0; i < commands.length; ++i) {
-			if (commands[i].getBuilderName().equals(ControllerXmlBuilder.BUILDER_ID)) {
+			if (commands[i].getBuilderName().equals(OfbizBuilder.BUILDER_ID)) {
 				ICommand[] newCommands = new ICommand[commands.length - 1];
 				System.arraycopy(commands, 0, newCommands, 0, i);
 				System.arraycopy(commands, i + 1, newCommands, i,
@@ -77,5 +75,4 @@ public class ControllerXmlNature implements IProjectNature {
 	public void setProject(IProject project) {
 		this.project = project;
 	}
-
 }

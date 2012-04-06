@@ -101,6 +101,7 @@ public class ServiceParser extends Parser {
 	
 	private void handleService(XmlPullParser xpp) {
 		curService = OfbizFactory.eINSTANCE.createService();
+		curService.setReference(OfbizFactory.eINSTANCE.createReferenceIn());
 		synchronized (component) {
 			curService.setComponent(component);
 		}

@@ -43,46 +43,60 @@ public class ControllerHelper {
 	}
 	public static List<HyperlinkMarker> getHyperlinkForRequestValueView(String requestValue, IFile file) {
 		List<HyperlinkMarker> retValue = new ArrayList<HyperlinkMarker>();
+		List<Controller> controllers = new ArrayList<Controller>();
 		final Controller controller = getController(file);
-		EList<AbstractViewMap> viewMaps = controller.getViewMaps();
-		for (final AbstractViewMap viewMap : viewMaps) {
-			if (requestValue.equals(viewMap.getHyperlinkKey())) {
-				retValue.add(new HyperlinkMarker(GoToFile.getMarker(file, viewMap.getMarkerKey())){
+		controllers.addAll(controller.getWebapp().getReferencedControllers());
+		if (controller.equals(controller.getWebapp().getController())) {
+			controllers.add(controller);
+		}
+		for (Controller controller2 : controllers) {
+			EList<AbstractViewMap> viewMaps = controller2.getViewMaps();
+			for (final AbstractViewMap viewMap : viewMaps) {
+				if (requestValue.equals(viewMap.getHyperlinkKey())) {
+					retValue.add(new HyperlinkMarker(GoToFile.getMarker(controller2.getFile(), viewMap.getMarkerKey())){
 
-					@Override
-					public String getTypeLabel() {
-						return "";
-					}
+						@Override
+						public String getTypeLabel() {
+							return "";
+						}
 
-					@Override
-					public String getHyperlinkText() {
-						return "View: " + viewMap.getName();
-					}
-					
-				});
+						@Override
+						public String getHyperlinkText() {
+							return "View: " + viewMap.getName();
+						}
+
+					});
+				}
 			}
 		}
 		return retValue;
 	}
 	public static List<HyperlinkMarker> getHyperlinkForRequestValueRequest(String requestValue, IFile file) {
 		List<HyperlinkMarker> retValue = new ArrayList<HyperlinkMarker>();
+		List<Controller> controllers = new ArrayList<Controller>();
 		final Controller controller = getController(file);
-		EList<RequestMap> requestMaps = controller.getRequestMaps();
-		for (final RequestMap requestMap : requestMaps) {
-			if (requestValue.equals(requestMap.getHyperlinkKey())) {
-				retValue.add(new HyperlinkMarker(GoToFile.getMarker(file, requestMap.getMarkerKey())){
+		controllers.addAll(controller.getWebapp().getReferencedControllers());
+		if (controller.equals(controller.getWebapp().getController())) {
+			controllers.add(controller);
+		}
+		for (Controller controller2 : controllers) {
+			EList<RequestMap> requestMaps = controller2.getRequestMaps();
+			for (final RequestMap requestMap : requestMaps) {
+				if (requestValue.equals(requestMap.getHyperlinkKey())) {
+					retValue.add(new HyperlinkMarker(GoToFile.getMarker(controller2.getFile(), requestMap.getMarkerKey())){
 
-					@Override
-					public String getTypeLabel() {
-						return "";
-					}
+						@Override
+						public String getTypeLabel() {
+							return "";
+						}
 
-					@Override
-					public String getHyperlinkText() {
-						return "Request map: " + requestMap.getName();
-					}
-					
-				});
+						@Override
+						public String getHyperlinkText() {
+							return "Request map: " + requestMap.getName();
+						}
+
+					});
+				}
 			}
 		}
 		return retValue;

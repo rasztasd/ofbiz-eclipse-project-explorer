@@ -81,7 +81,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="projects" upperBound="-1"
         eType="#//Project" containment="true" eOpposite="#//Project/root"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Service" eSuperTypes="#//NamedElement #//HasDocumentation #//HasXmlDefinition">
+  <eClassifiers xsi:type="ecore:EClass" name="Service" eSuperTypes="#//NamedElement #//HasDocumentation #//Referencable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="engine" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -108,7 +108,12 @@
   <eClassifiers xsi:type="ecore:EClass" name="TypedElement" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ViewEntity" eSuperTypes="#//IEntity"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ViewEntity" eSuperTypes="#//IEntity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="memberEntities" lowerBound="1"
+        upperBound="-1" eType="#//MemberEntity" containment="true" eOpposite="#//MemberEntity/viewEntity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="viewLinks" lowerBound="1"
+        upperBound="-1" eType="#//ViewLink" containment="true" eOpposite="#//ViewLink/viewEntity"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="IFile" instanceClassName="org.eclipse.core.resources.IFile"
       serializable="false"/>
   <eClassifiers xsi:type="ecore:EDataType" name="IFolder" instanceClassName="org.eclipse.core.resources.IFolder"
@@ -138,13 +143,14 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Controller" eSuperTypes="#//NamedElement #//HasXmlDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Component"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="webapp" eType="#//WebApp"
-        eOpposite="#//WebApp/controller"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="webapp" eType="#//WebApp"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requestMaps" upperBound="-1"
         eType="#//RequestMap" containment="true" eOpposite="#//RequestMap/controller"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="viewMaps" upperBound="-1"
         eType="#//AbstractViewMap" containment="true" eOpposite="#//AbstractViewMap/controller"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="uri" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="referencedWebapp" eType="#//WebApp"
+        eOpposite="#//WebApp/referencedControllers"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RequestMap" eSuperTypes="#//NamedElement #//HasUrl #//HasXmlDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="controller" lowerBound="1"
@@ -176,9 +182,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="WebApp" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="uri" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="controller" lowerBound="1"
-        eType="#//Controller" containment="true" eOpposite="#//Controller/webapp"/>
+        eType="#//Controller" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Component"
         eOpposite="#//Component/webapps"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="referencedControllers"
+        upperBound="-1" eType="#//Controller" containment="true" eOpposite="#//Controller/referencedWebapp"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AbstractEvent" abstract="true" eSuperTypes="#//NamedElement #//HasXmlDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="requestMap" eType="#//RequestMap"
@@ -253,4 +261,27 @@
         eType="#//Service" eOpposite="#//Service/secas"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RequestResponse" eSuperTypes="#//AbstractResponse"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MemberEntity" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="entityAlias" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="entityName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="viewEntity" eType="#//ViewEntity"
+        eOpposite="#//ViewEntity/memberEntities"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ViewLink" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="entityAlias" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="relEntityAlias" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="optional" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="viewEntity" eType="#//ViewEntity"
+        eOpposite="#//ViewEntity/viewLinks"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReferenceIn">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="referenceIn" lowerBound="1"
+        eType="#//Referencable" eOpposite="#//Referencable/reference"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="references" upperBound="-1"
+        eType="#//Referencable"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Referencable" eSuperTypes="#//HasXmlDefinition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="#//ReferenceIn"
+        eOpposite="#//ReferenceIn/referenceIn"/>
+  </eClassifiers>
 </ecore:EPackage>

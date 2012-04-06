@@ -39,7 +39,11 @@ public class OfbizModelSingleton {
 			return null;
 		} else {
 			String name = activeProject.getName();
-			return projectsByName.get(name);
+			Project project = projectsByName.get(name);
+			if (project == null) {
+				return null;
+			}
+			return project;
 		}
 	}
 	public IProject getActiveProject() {

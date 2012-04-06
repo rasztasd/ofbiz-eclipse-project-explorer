@@ -22,7 +22,10 @@ import org.ofbiz.plugin.ofbiz.Component;
 import org.ofbiz.plugin.ofbiz.Entity;
 import org.ofbiz.plugin.ofbiz.Field;
 import org.ofbiz.plugin.ofbiz.IEntity;
+import org.ofbiz.plugin.ofbiz.MemberEntity;
 import org.ofbiz.plugin.ofbiz.OfbizFactory;
+import org.ofbiz.plugin.ofbiz.ViewEntity;
+import org.ofbiz.plugin.ofbiz.ViewLink;
 import org.xmlpull.v1.XmlPullParser;
 
 
@@ -45,6 +48,7 @@ public class EntityParser extends Parser {
 		IMarker createMarker = null;
 		String markerKey = null;
 		String viewType = null;
+		boolean entity = true;
 		if (xpp.getName().equals(ENTITY)) {
 			
 			assert current == null;
@@ -93,8 +97,23 @@ public class EntityParser extends Parser {
 				}
 			}
 			
+		} else if (xpp.getName().equals("member-entity")) {
+			entity = false;
+			ViewEntity currentView = (ViewEntity) current;
+			MemberEntity memberEntity = OfbizFactory.eINSTANCE.createMemberEntity();
+			memberEntity.setEntityAlias(xpp.getAttributeValue(null, "entity-alias"));
+			memberEntity.setEntityName(xpp.getAttributeValue(null, "entity-name"));
+			memberEntity.setViewEntity(currentView);
+		} else if (xpp.getName().equals("view-link")) {
+			entity = false;
+			ViewEntity currentView = (ViewEntity) current;
+			ViewLink viewLink = OfbizFactory.eINSTANCE.createViewLink();
+			viewLink.setViewEntity(currentView);
+			viewLink.setEntityAlias(xpp.getAttributeValue(null, "entity-alias"));
+			viewLink.setRelEntityAlias(xpp.getAttributeValue(null, "rel-entity-alias"));
+			viewLink.setOptional(Boolean.valueOf(xpp.getAttributeValue(null, "entity-alias")));
 		}
-		if (createMarker != null) {
+		if (entity && createMarker != null) {
 			current.setMarkerKey(markerKey);
 			current.setNameToShow(current.getName());
 			current.setHyperlinkKey(current.getName());

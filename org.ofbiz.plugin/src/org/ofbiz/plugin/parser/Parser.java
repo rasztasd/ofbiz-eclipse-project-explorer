@@ -24,8 +24,11 @@ import java.io.Reader;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.ofbiz.plugin.Plugin;
+import org.ofbiz.plugin.ofbiz.Component;
+import org.ofbiz.plugin.ofbiz.Project;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -90,5 +93,12 @@ public abstract class Parser {
 			Plugin.logError("Unable to create marker for "+file.getName(), e);
 			return null;
 		}
+	}
+
+	/** retrieves model file for either an entity-resource or a service-resource */
+	protected IFile getResourceFile(String location, Component component) {
+		IResource res = component.getFolder().findMember(location);
+		return (IFile) res;
+	
 	}
 }

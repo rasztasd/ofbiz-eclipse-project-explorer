@@ -68,7 +68,6 @@ import org.ofbiz.plugin.ofbiz.Component;
 import org.ofbiz.plugin.ofbiz.Directory;
 import org.ofbiz.plugin.ofbiz.Entity;
 import org.ofbiz.plugin.ofbiz.ExtendEntity;
-import org.ofbiz.plugin.ofbiz.HasDocumentation;
 import org.ofbiz.plugin.ofbiz.HasUrl;
 import org.ofbiz.plugin.ofbiz.HasXmlDefinition;
 import org.ofbiz.plugin.ofbiz.IEntity;
@@ -366,18 +365,6 @@ public class ExplorerView extends ViewPart {
 				if (selObj instanceof TreeSelection) {
 					TreeSelection treeSelObj = (TreeSelection) selObj;
 					Object selection = treeSelObj.getFirstElement();
-					if (selection != null && selection instanceof Service) {
-						Service service = (Service) selection;
-						IJavaProject java =
-							service.getComponent()
-								   .getDirectory()
-								   .getProject()
-								   .getJavaproject();
-						Analysis analysis = new Analysis(java,service, service.getComponent()
-								   .getDirectory()
-								   .getProject());
-						analysis.run(true);						
-					}
 				}
 			}
 		};
