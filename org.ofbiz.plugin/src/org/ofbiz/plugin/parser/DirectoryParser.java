@@ -111,5 +111,11 @@ public class DirectoryParser extends Parser {
 		component.setDirectory(dir);
 		Plugin.debug("added component: "+component);
 	}
+
+	@Override
+	protected String getMarkerType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

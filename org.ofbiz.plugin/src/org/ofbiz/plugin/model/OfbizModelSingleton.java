@@ -8,12 +8,14 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.ofbiz.plugin.Plugin;
 import org.ofbiz.plugin.ofbiz.Component;
+import org.ofbiz.plugin.ofbiz.Controller;
 import org.ofbiz.plugin.ofbiz.HasXmlDefinition;
 import org.ofbiz.plugin.ofbiz.Project;
 import org.ofbiz.plugin.ofbiz.util.OfbizSwitch;
@@ -94,5 +96,28 @@ public class OfbizModelSingleton {
 		}
 		return xmlDefinitions;
 	}
-//	public EObject get
+	public EObject getEObject(final IFile file) {
+		EObject retValue = null;
+		Project ofbizProject = findProjectByEclipseProjectName(file.getProject().getName());		
+		TreeIterator<EObject> eAllContents = ofbizProject.eAllContents();
+		OfbizSwitch<EObject> ofbizSwitch = new OfbizSwitch<EObject>() {
+			
+			@Override
+			public EObject caseController(Controller object) {
+				return ok(object)?object:null;
+			}
+
+			private boolean ok(HasXmlDefinition object) {
+				if (file.equals(object.getFile())) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		};
+		while (eAllContents.hasNext() && retValue != null) {
+			retValue = ofbizSwitch.doSwitch(eAllContents.next());
+		}
+		return retValue;
+	}
 }

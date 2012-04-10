@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
@@ -19,6 +20,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.util.FeatureMapUtil.BasicValidator;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
@@ -73,9 +75,9 @@ public class LoadOperation extends WorkspaceModifyOperation {
 	private Set<String> alreadyParsedJavaFiles = new HashSet<String>();
 	private List<String> screensToParse = new ArrayList<String>();
 	private List<IFile> secasToParse = new ArrayList<IFile>();
-	private Project project;
+	private IProject project;
 
-	public LoadOperation(Project project) {
+	public LoadOperation(IProject project) {
 		this.project = project;
 	}
 
@@ -85,13 +87,10 @@ public class LoadOperation extends WorkspaceModifyOperation {
 
 		monitor.beginTask("load OFBiz projects:", IProgressMonitor.UNKNOWN);
 
-		// clear
-		project.eContents().clear();
-
 		monitor.worked(1);
 
 		// load open OFBiz projects
-		load(project.getProject(),monitor);
+		load(project, monitor);
 
 		monitor.done();
 
@@ -100,24 +99,37 @@ public class LoadOperation extends WorkspaceModifyOperation {
 	private void load(IProject project, IProgressMonitor monitor) {
 
 		monitor.subTask("load project: "+project.getName());
-
-		// initialize domain object but don't add project to root until the end
-
-		Project ofbizProject = OfbizFactory.eINSTANCE.createProject();
-		ofbizProject.setName(project.getName());
-		ofbizProject.setJavaproject(JavaCore.create(project));
-		ofbizProject.setProject(project);
-
-		//eclipse project names are unique
-		OfbizModelSingleton.get().addProject(project.getName(), ofbizProject);
-
+		
+		try {
+			for (IMarker marker : project.findMarkers("org.ofbiz.plugin.text", true, IResource.DEPTH_INFINITE)) {
+				marker.delete();
+			}
+		} catch (CoreException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		// parse project configuration
-
+		
 		IResource res = project.findMember(Plugin.BASECONFIG);
 		if (res==null || !res.exists() || !(res instanceof IFile)) {
 			Plugin.logError("Project configuration does not exist: "+res.getName(), null);
 			return;
 		}
+
+		// initialize domain object but don't add project to root until the end
+
+		// clear		
+		Project ofbizProject = OfbizModelSingleton.get().findProjectByEclipseProjectName(project.getName());
+		if (ofbizProject == null) {
+			ofbizProject = OfbizFactory.eINSTANCE.createProject();
+			OfbizModelSingleton.get().addProject(project.getName(), ofbizProject);
+		}
+		ofbizProject.getDirectories().clear();
+		ofbizProject.setName(project.getName());
+		ofbizProject.setJavaproject(JavaCore.create(project));
+		ofbizProject.setProject(project);
+
 
 		DirectoryParser parser = new DirectoryParser(ofbizProject);
 		try {
@@ -143,7 +155,11 @@ public class LoadOperation extends WorkspaceModifyOperation {
 		for(Directory directory : ofbizProject.getDirectories()) {
 			for (Component component : directory.getComponents()) {
 				for (WebApp webapp : component.getWebapps()) {
-					EList<AbstractViewMap> viewMaps = webapp.getController().getViewMaps();
+					Controller controller = webapp.getController();
+					if (controller == null) {
+						continue;
+					}
+					EList<AbstractViewMap> viewMaps = controller.getViewMaps();
 					for (AbstractViewMap viewMap : viewMaps) {
 						if (viewMap instanceof ScreenViewMap) {
 							ScreenViewMap screenViewMap = (ScreenViewMap) viewMap;
@@ -401,6 +417,7 @@ public class LoadOperation extends WorkspaceModifyOperation {
 		// parse component configuration
 
 		ComponentParser parser = new ComponentParser(component);
+		BasicValidator basicValidator = new BasicValidator(component.eClass(), component.eContainingFeature());
 		IResource cfg = component.getFolder().findMember("ofbiz-component.xml");
 		component.setFile((IFile) cfg);
 		if(cfg==null || !cfg.exists() || !(cfg instanceof IFile)) {

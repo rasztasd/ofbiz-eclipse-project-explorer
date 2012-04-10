@@ -110,7 +110,7 @@ public class WebappParser extends Parser {
 			includeLocations.add(new WebappModel(getResourceFile(location, componentByUrl), location, referencingController==null?controller:referencingController));
 		} else if (name.equals("request-map")) {
 			String uri = xpp.getAttributeValue(null, "uri");
-			String requestUriString = this.uri + "/control/" + uri;
+			String requestUriString = this.uri.substring(1) + "/control/" + uri;
 			//			requestUri.setName(requestUri);
 			curRequestMap = OfbizFactory.eINSTANCE.createRequestMap();
 			curRequestMap.setSecurityAuth(false);
@@ -258,6 +258,12 @@ public class WebappParser extends Parser {
 	}
 	public Set<String> getScreenLocations() {
 		return screenLocations;
+	}
+
+	@Override
+	protected String getMarkerType() {
+		// TODO Auto-generated method stub
+		return "org.ofbiz.plugin.controllerMarker";
 	}
 
 }

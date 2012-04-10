@@ -37,8 +37,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="Entity" eSuperTypes="#//IEntity"/>
   <eClassifiers xsi:type="ecore:EClass" name="EntityRef">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mode" lowerBound="1" eType="#//ServiceMode"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="include" lowerBound="1"
-        eType="#//Include" transient="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="include" eType="#//Include"
+        transient="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="optional" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="exlude" upperBound="-1"
@@ -46,6 +46,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="service" lowerBound="1"
         eType="#//Service" eOpposite="#//Service/autoAttributes"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="entity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="project" lowerBound="1"
+        eType="#//Project" eOpposite="#//Project/entityRefs"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExtendEntity" eSuperTypes="#//IEntity"/>
   <eClassifiers xsi:type="ecore:EClass" name="Field" eSuperTypes="#//NamedElement #//TypedElement">
@@ -54,8 +56,8 @@
         eType="#//IEntity" eOpposite="#//IEntity/fields"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FolderElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="folder" lowerBound="1"
-        eType="#//IFolder" transient="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="folder" eType="#//IFolder"
+        transient="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IEntity" eSuperTypes="#//NamedElement #//HasXmlDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="component" lowerBound="1"
@@ -70,12 +72,14 @@
   <eClassifiers xsi:type="ecore:EClass" name="Project" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="directories" upperBound="-1"
         eType="#//Directory" containment="true" eOpposite="#//Directory/project"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="javaproject" lowerBound="1"
-        eType="#//IJavaProject" transient="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="javaproject" eType="#//IJavaProject"
+        transient="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="root" lowerBound="1" eType="#//Root"
         eOpposite="#//Root/projects"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="project" lowerBound="1"
         eType="#//IProject" transient="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityRefs" upperBound="-1"
+        eType="#//EntityRef" containment="true" eOpposite="#//EntityRef/project"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Root">
     <eStructuralFeatures xsi:type="ecore:EReference" name="projects" upperBound="-1"
@@ -221,12 +225,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="HasXmlDefinition" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerKey" lowerBound="1"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerKey" unique="false"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" lowerBound="1" eType="#//IFile"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" eType="#//IFile"
         transient="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hyperlinkKey" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hyperlinkKey" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="hyperlinkText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nameToShow" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
@@ -282,6 +286,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Referencable" eSuperTypes="#//HasXmlDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="#//ReferenceIn"
-        eOpposite="#//ReferenceIn/referenceIn"/>
+        containment="true" eOpposite="#//ReferenceIn/referenceIn"/>
   </eClassifiers>
 </ecore:EPackage>

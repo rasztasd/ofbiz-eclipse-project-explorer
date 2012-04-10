@@ -41,7 +41,6 @@ public class ScreenParser extends Parser {
 	private static final String TEMPLATE_TAG = "html-template";
 
 	private Screen curScreen;
-	private EntityRef curAutoAttr;
 	private boolean widgets=false;
 	private boolean actions=false;
 	private Set<String> screens = new HashSet<String>();
@@ -90,17 +89,6 @@ public class ScreenParser extends Parser {
 
 		if (xpp.getName().equals("screen")) {
 			curScreen = null;
-
-		} else if (xpp.getName().equals("actions")) {
-			curAutoAttr = null;
-
-		} else if (xpp.getName().equals("auto-attributes")) {
-			curAutoAttr = null;
-
-		} else if (xpp.getName().equals("auto-attributes")) {
-			assert curAutoAttr != null;
-			curAutoAttr = null;
-
 		}
 	}
 
@@ -147,5 +135,10 @@ public class ScreenParser extends Parser {
 	}
 	public Set<String> getForms() {
 		return forms;
+	}
+
+	@Override
+	protected String getMarkerType() {
+		return "org.ofbiz.plugin.screenMarker";
 	}
 }

@@ -24,4 +24,9 @@ public class SecaParser extends Parser {
 			}
 		}
 	}
+	@Override
+	protected String getMarkerType() {
+		// TODO Auto-generated method stub
+		return "org.ofbiz.plugin.secaMarker";
+	}
 }

@@ -164,6 +164,12 @@ public class OfbizValidateHandler extends AbstractHandler {
 				}
 			}
 		}
+
+		@Override
+		protected String getMarkerType() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 	private void addMarker(IFile file, String message, int lineNumber,
 			int severity) {

@@ -17,22 +17,30 @@
  */
 package org.ofbiz.plugin;
 
-import java.lang.reflect.InvocationTargetException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -40,7 +48,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -222,16 +229,7 @@ public class ExplorerView extends ViewPart {
 		makeActions();
 		hookDoubleClickAction();
 		contributeToActionBars();
-		
-		try {
-			LoadOperation refresh = new LoadOperation(this);
-			new ProgressMonitorDialog(getSite().getShell()).run(true, true, refresh);
-			viewer.refresh();
-		} catch (InvocationTargetException e) {
-			// handle exception
-		} catch (InterruptedException e) {
-			// handle cancelation
-		}
+
 	}
 
 	public Root getRoot() {
@@ -313,15 +311,32 @@ public class ExplorerView extends ViewPart {
 		//
 		filterAction = new Action() {
 			public void run() {
-				TreeViewer viewer = filteredTree.getViewer();
-				if(filterOn) {
-					viewer.removeFilter(filter);
-					viewer.refresh();
-				} else {
-					viewer.addFilter(filter);
-					viewer.refresh();
+//				TreeViewer viewer = filteredTree.getViewer();
+//				if(filterOn) {
+//					viewer.removeFilter(filter);
+//					viewer.refresh();
+//				} else {
+//					viewer.addFilter(filter);
+//					viewer.refresh();
+//				}
+//				filterOn = !filterOn;
+				root.getProjects().clear();
+				ResourceSet resSet = new ResourceSetImpl();
+				// Create a resource
+				Resource resource = resSet.createResource(URI
+						.createURI("ofbizContent/ofbizContent.ofbiz"));
+				for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+					Project ofbizProject = OfbizModelSingleton.get().findProjectByEclipseProjectName(project.getName());
+					if (ofbizProject != null) {
+						resource.getContents().add(ofbizProject);
+					}
 				}
-				filterOn = !filterOn;
+				try {
+					resource.save(Collections.EMPTY_MAP);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		};
 		filterAction.setText("Filter");
@@ -331,28 +346,21 @@ public class ExplorerView extends ViewPart {
 		//
 		analyzeAllAction = new Action() {
 			public void run() {
-				new WorkspaceJob("analyze all java-based services") {
-					@Override
-					public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-						List<Service> services = new ArrayList<Service>();
-						for(Project p : root.getProjects()) {
-							for(Directory d : p.getDirectories()) {
-								for(Component c : d.getComponents()) {
-									for(Service s : c.getServices()) {
-										if(s.getEngine().equals("java")) {
-											services.add(s);
-										}
-									}
-								}
-							}
-							new Analysis(p.getJavaproject(), services, p).run(true);
+				ResourceSet resSet = new ResourceSetImpl();
+				// Get the resource
+				try {
+					Resource resource = resSet.getResource(URI
+							.createURI("ofbizContent/ofbizContent.ofbiz"), true);
+					for (EObject object : resource.getContents()) {
+						if (object instanceof Project) {
+							Project project = (Project) object;
+							OfbizModelSingleton.get().addProject(project.getProject().getName(), project);
 							
 						}
-						return Status.OK_STATUS;
 					}
-					
-				}.schedule();
-			}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}}
 		};
 		analyzeAllAction.setText("Analyze all");
 		analyzeAllAction.setToolTipText("Analyze all java-based serviceimplementations");

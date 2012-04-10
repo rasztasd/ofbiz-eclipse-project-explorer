@@ -19,7 +19,7 @@
   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
     <factory 
        uri = "https://github.com/rasztasd/ofbiz-eclipse-project-explorer" 
-       class = "org.ofbiz.plugin.provider.OfbizItemProviderAdapterFactory"
+       class = "org.ofbiz.plugin.ofbiz.provider.OfbizItemProviderAdapterFactory"
        supportedTypes = 
          "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
           org.eclipse.emf.edit.provider.IStructuredItemContentProvider
@@ -31,7 +31,7 @@
   <extension point="org.eclipse.emf.ecore.generated_package">
     <package
        uri = "https://github.com/rasztasd/ofbiz-eclipse-project-explorer"
-       class = "org.ofbiz.plugin.OfbizPackage"
+       class = "org.ofbiz.plugin.ofbiz.OfbizPackage"
        genModel = "model/ofbiz.genmodel" /> 
   </extension>
   <extension
@@ -321,6 +321,56 @@
      <persistent
            value="true">
      </persistent>
+  </extension>
+
+  
+  <extension
+        id="controllerMarker"
+        point="org.eclipse.core.resources.markers">
+	 <super type="org.ofbiz.plugin.text"></super>
+	 <persistent
+        value="true">
+	 </persistent>
+  </extension>
+  <extension
+        id="screenMarker"
+        point="org.eclipse.core.resources.markers">
+	 <super type="org.ofbiz.plugin.text"></super>
+	 <persistent
+        value="true">
+	 </persistent>
+  </extension>
+  <extension
+        id="formMarker"
+        point="org.eclipse.core.resources.markers">
+	 <super type="org.ofbiz.plugin.text"></super>
+	 <persistent
+        value="true">
+	 </persistent>
+  </extension>
+  <extension
+        id="serviceMarker"
+        point="org.eclipse.core.resources.markers">
+	 <super type="org.ofbiz.plugin.text"></super>
+	 <persistent
+        value="true">
+	 </persistent>
+  </extension>
+  <extension
+        id="secaMarker"
+        point="org.eclipse.core.resources.markers">
+	 <super type="org.ofbiz.plugin.text"></super>
+	 <persistent
+        value="true">
+	 </persistent>
+  </extension>
+  <extension
+        id="componentMarker"
+        point="org.eclipse.core.resources.markers">
+	 <super type="org.ofbiz.plugin.text"></super>
+	 <persistent
+        value="true">
+	 </persistent>
   </extension>
   
   <extension

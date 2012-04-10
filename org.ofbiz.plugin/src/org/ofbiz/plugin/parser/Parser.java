@@ -83,7 +83,7 @@ public abstract class Parser {
 			return null;
 		}
 		try {
-			IMarker marker = file.createMarker(Plugin.TEXT_MARKER);
+			IMarker marker = file.createMarker(getMarkerType());
 			marker.setAttribute(IMarker.LINE_NUMBER, lineno);
 			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
 			marker.setAttribute("name", name);
@@ -101,4 +101,5 @@ public abstract class Parser {
 		return (IFile) res;
 	
 	}
+	protected abstract String getMarkerType();
 }

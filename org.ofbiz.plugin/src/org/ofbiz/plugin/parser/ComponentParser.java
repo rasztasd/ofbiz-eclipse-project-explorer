@@ -111,7 +111,7 @@ public class ComponentParser extends Parser {
 			//TODO: lacks proper error handling if file does not exist
 			IFile file = getResourceFile(xpp.getAttributeValue(null, "location") + "/WEB-INF/controller.xml", component);
 			if (file != null) {
-				webappModels.add(new WebappModel(file, xpp.getAttributeValue(null, "mount-point"), null));
+				webappModels.add(new WebappModel(file, xpp.getAttributeValue(null, "mount-point").substring(1), null));
 			}
 		} else if (xpp.getName().equals("classpath")) {
 			if ("dir".equals(xpp.getAttributeValue(null, "type"))) {
@@ -127,5 +127,10 @@ public class ComponentParser extends Parser {
 				createMarker(xpp.getLineNumber(), markerKey);
 			}
 		}
+	}
+
+	@Override
+	protected String getMarkerType() {
+		return "org.ofbiz.plugin.componentMarker";
 	}
 }

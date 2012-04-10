@@ -147,4 +147,9 @@ public class EntityParser extends Parser {
 			
 		}
 	}
+
+	@Override
+	protected String getMarkerType() {
+		return "org.ofbiz.plugin.entityMarker";
+	}
 }
