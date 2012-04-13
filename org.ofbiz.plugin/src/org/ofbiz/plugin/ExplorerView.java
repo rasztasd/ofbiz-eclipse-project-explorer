@@ -59,6 +59,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
@@ -70,6 +72,9 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.ofbiz.plugin.analysis.Analysis;
+import org.ofbiz.plugin.dnd.DragSource;
+import org.ofbiz.plugin.dnd.DropViewAdapter;
+import org.ofbiz.plugin.dnd.OfbizTransfer;
 import org.ofbiz.plugin.model.OfbizModelSingleton;
 import org.ofbiz.plugin.ofbiz.Attribute;
 import org.ofbiz.plugin.ofbiz.Component;
@@ -212,6 +217,11 @@ public class ExplorerView extends ViewPart {
 					return super.category(element);
 			}
 		});
+		
+		int ops = DND.DROP_MOVE;
+		Transfer[] transfers = new Transfer[] { OfbizTransfer.getInstance()};
+		viewer.addDragSupport(ops, transfers, new DragSource(viewer));
+		
 		filter = new ViewerFilter() {
 			@Override
 			public boolean select(Viewer viewer, Object parentElement,Object element) {

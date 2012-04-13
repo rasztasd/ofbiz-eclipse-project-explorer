@@ -78,18 +78,18 @@ public class OfbizBuilder extends IncrementalProjectBuilder {
 				//					break;
 				case IResourceDelta.SYNC:
 				case IResourceDelta.CHANGED:
-					for (IMarker marker : file.findMarkers("org.ofbiz.plugin.text", true, IResource.DEPTH_INFINITE)) {
-						if (marker.getType().equals("org.ofbiz.plugin.controllerMarker")) {
-							WebappParser parser = new WebappParser(component, uri, file, webApp, referencingController)
-							xpp = Plugin.getDefault().getXmlPullParserPool().getPullParserFromPool();
-							Controller referencingController = null;
-							if (!controller.equals(webapp.getController())) {
-								referencingController = webapp.getController();
-							}
-							WebappParser webAppParser = new WebappParser(webapp.getComponent(), webapp.getUri(), file, webapp, referencingController);
-							webAppParser.processDocument(xpp, file);
-						}
-					}
+//					for (IMarker marker : file.findMarkers("org.ofbiz.plugin.text", true, IResource.DEPTH_INFINITE)) {
+//						if (marker.getType().equals("org.ofbiz.plugin.controllerMarker")) {
+//							WebappParser parser = new WebappParser(component, uri, file, webApp, referencingController)
+//							xpp = Plugin.getDefault().getXmlPullParserPool().getPullParserFromPool();
+//							Controller referencingController = null;
+//							if (!controller.equals(webapp.getController())) {
+//								referencingController = webapp.getController();
+//							}
+//							WebappParser webAppParser = new WebappParser(webapp.getComponent(), webapp.getUri(), file, webapp, referencingController);
+//							webAppParser.processDocument(xpp, file);
+//						}
+//					}
 //					if (resource.getName().endsWith(".bsh")) {
 //						new BshBuilder(file);
 //					} else {

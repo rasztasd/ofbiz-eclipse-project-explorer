@@ -9,11 +9,18 @@
             name="OFBiz">
       </category>
       <view
+            id="org.ofbiz.plugin.explorerview"
             category="org.ofbiz.plugin.category"
             class="org.ofbiz.plugin.ExplorerView"
             icon="icons/ofbiz.png"
-            id="org.ofbiz.plugin.explorerview"
             name="OFBiz Explorer">
+      </view>
+      <view
+            id="org.ofbiz.plugin.view.workingBench"
+            category="org.ofbiz.plugin.category"
+            name="Ofbiz Workbench"
+            class="org.ofbiz.plugin.view.WorkbenchView">
+            
       </view>
    </extension>
   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
@@ -519,6 +526,26 @@
          	<run         		
                 class="org.ofbiz.plugin.builder.OfbizBuilder">
          	</run>
-         </builder>
+       	   </builder>
+      </extension>
+      <extension
+            point="org.eclipse.ui.newWizards">
+            <category
+            	name="Ofbiz"
+                  id="org.ofbiz.plugin.category.ofbizcategory">
+            </category>
+            <wizard
+            	name="Screen"
+            	class="org.ofbiz.plugin.wizard.NewScreenWizard"
+            	category="org.ofbiz.plugin.category.ofbizcategory"
+                  id="org.ofbiz.plugin.wizard1">
+            </wizard>
+      </extension>
+      <extension
+            point="org.eclipse.ui.dropActions">
+         <action         		
+               class="org.ofbiz.plugin.dnd.DropProvider"
+               id="org.ofbiz.plugin.action1">
+         </action>
       </extension>
 </plugin>

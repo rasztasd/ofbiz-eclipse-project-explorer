@@ -36,7 +36,6 @@ public class OfbizQueryParticipant implements IQueryParticipant {
 	public void search(ISearchRequestor requestor,
 			QuerySpecification querySpecification, IProgressMonitor monitor)
 			throws CoreException {
-		// TODO Auto-generated method stub	
 		if (querySpecification instanceof ElementQuerySpecification) {
 			ElementQuerySpecification elementQuerySpecification = (ElementQuerySpecification) querySpecification;
 			String projectName = elementQuerySpecification.getElement().getJavaProject().getProject().getName();

@@ -79,26 +79,26 @@ public class Plugin extends AbstractUIPlugin {
 		plugin = this;
 		pool = new XmlPullParserPool();
 		// As of here we preparing to save the model content
-		OfbizPackageImpl.init();
-		// Register the XMI resource factory for the .website extension
-		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-		Map<String, Object> m = reg.getExtensionToFactoryMap();
-		m.put("ofbiz", new XMIResourceFactoryImpl());
-		// Obtain a new resource set
-		ResourceSet resSet = new ResourceSetImpl();
-		// Get the resource
-		try {
-			Resource resource = resSet.getResource(URI
-					.createURI("ofbizContent/ofbizContent.ofbiz"), true);
-			for (EObject object : resource.getContents()) {
-				if (object instanceof Project) {
-					Project project = (Project) object;
-					OfbizModelSingleton.get().addProject(project.getProject().getName(), project);
-				}
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+//		OfbizPackageImpl.init();
+//		// Register the XMI resource factory for the .website extension
+//		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+//		Map<String, Object> m = reg.getExtensionToFactoryMap();
+//		m.put("ofbiz", new XMIResourceFactoryImpl());
+//		// Obtain a new resource set
+//		ResourceSet resSet = new ResourceSetImpl();
+//		// Get the resource
+//		try {
+//			Resource resource = resSet.getResource(URI
+//					.createURI("ofbizContent/ofbizContent.ofbiz"), true);
+//			for (EObject object : resource.getContents()) {
+//				if (object instanceof Project) {
+//					Project project = (Project) object;
+//					OfbizModelSingleton.get().addProject(project.getProject().getName(), project);
+//				}
+//			}
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//		}
 		//		resource.load(Collections.EMPTY_MAP);
 		// Get the first model element and cast it to the right type, in my
 		// example everything is hierarchical included in this first node
@@ -111,16 +111,16 @@ public class Plugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		pool = null;
-		ResourceSet resSet = new ResourceSetImpl();
-		// Create a resource
-		Resource resource = resSet.createResource(URI
-				.createURI("ofbizContent/ofbizContent.ofbiz"));
-		resource.getContents().clear();
-		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-			Project ofbizProject = OfbizModelSingleton.get().findProjectByEclipseProjectName(project.getName());
-			resource.getContents().add(ofbizProject);
-		}
-		resource.save(Collections.EMPTY_MAP);
+//		ResourceSet resSet = new ResourceSetImpl();
+//		// Create a resource
+//		Resource resource = resSet.createResource(URI
+//				.createURI("ofbizContent/ofbizContent.ofbiz"));
+//		resource.getContents().clear();
+//		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+//			Project ofbizProject = OfbizModelSingleton.get().findProjectByEclipseProjectName(project.getName());
+//			resource.getContents().add(ofbizProject);
+//		}
+//		resource.save(Collections.EMPTY_MAP);
 		super.stop(context);
 	}
 

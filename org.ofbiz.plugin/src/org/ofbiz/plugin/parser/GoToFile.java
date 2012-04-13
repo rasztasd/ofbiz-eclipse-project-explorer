@@ -61,8 +61,7 @@ public class GoToFile {
 	public static IMarker resolveMarker(IFile file, String name) {
 		try {
 			IMarker[] markers = 
-				file.findMarkers(
-				Plugin.TEXT_MARKER, true, IResource.DEPTH_INFINITE);
+				file.findMarkers("org.ofbiz.plugin.text", true, IResource.DEPTH_INFINITE);
 			for(IMarker m : markers) {
 				if(m.getAttribute("name").equals(name)) {
 					return m;
