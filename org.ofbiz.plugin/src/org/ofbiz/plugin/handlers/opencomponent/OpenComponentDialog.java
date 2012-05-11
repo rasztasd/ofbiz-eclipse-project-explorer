@@ -10,22 +10,27 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
-import org.eclipse.ui.dialogs.FilteredResourcesSelectionDialog;
 import org.ofbiz.plugin.Plugin;
 import org.ofbiz.plugin.model.OfbizModelSingleton;
+import org.ofbiz.plugin.ofbiz.Entity;
 import org.ofbiz.plugin.ofbiz.HasXmlDefinition;
-import org.ofbiz.plugin.ofbiz.provider.OfbizItemProviderAdapterFactory;
+import org.ofbiz.plugin.ofbiz.RequestMap;
+import org.ofbiz.plugin.ofbiz.Screen;
+import org.ofbiz.plugin.ofbiz.Service;
 import org.ofbiz.plugin.parser.GoToFile;
 
 public class OpenComponentDialog extends FilteredItemsSelectionDialog {
@@ -108,8 +113,21 @@ public class OpenComponentDialog extends FilteredItemsSelectionDialog {
 			
 			@Override
 			public String getText(Object arg0) {
-				// TODO Auto-generated method stub
-				return null;
+				StringBuilder sb = new StringBuilder();
+				HasXmlDefinition hasXmlDefinition = (HasXmlDefinition) arg0;
+				if (arg0 instanceof Service) {
+					sb.append("Service");
+				} else if (arg0 instanceof RequestMap) {
+					sb.append("RequestMap");
+				} else if (arg0 instanceof Screen) {
+					sb.append("Screen");
+				} else if (arg0 instanceof Entity) {
+					sb.append("Entity");
+				} else {
+					sb.append("TODO");
+				}
+				sb.append(" ").append(hasXmlDefinition.getFile().getName());
+				return sb.toString();
 			}
 			
 			@Override
@@ -118,6 +136,15 @@ public class OpenComponentDialog extends FilteredItemsSelectionDialog {
 				return null;
 			}
 		});
+		IEditorSite editorSite = Plugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getSite().getWorkbenchWindow().getActivePage().getActiveEditor().getEditorSite();
+		ISelectionProvider selectionProvider = editorSite.getSelectionProvider();
+		ISelection selection = selectionProvider.getSelection();
+		if (selection instanceof TextSelection) {
+			TextSelection textSelection = (TextSelection) selection;
+			String string = textSelection.getText();
+			setInitialPattern(string);
+		}
+		System.out.println();
 	}
 
 	@Override

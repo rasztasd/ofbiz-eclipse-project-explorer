@@ -119,7 +119,7 @@ public class WebappParser extends Parser {
 			curRequestMap.setUrl(requestUriString);
 			createMarker(xpp.getLineNumber(), requestUriString);
 			curRequestMap.setMarkerKey(requestUriString);
-			curRequestMap.setNameToShow(requestUriString);
+			curRequestMap.setNameToShow(uri);
 			curRequestMap.setHyperlinkKey(uri);
 			curRequestMap.setHyperlinkText("Request map: " + requestUriString);
 			curRequestMap.setFile(file);

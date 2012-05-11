@@ -193,6 +193,7 @@ public class LoadOperation extends WorkspaceModifyOperation {
 							}
 							if (screenFile != null) {
 								ScreenParser screenParser = new ScreenParser(screenFile, nextScreenToParse, ofbizProject);
+								monitor.subTask("load screen: " + screenFile.getName());
 								XmlPullParser xpp;
 								try {
 									xpp = Plugin.getDefault().getXmlPullParserPool().getPullParserFromPool();
@@ -203,6 +204,7 @@ public class LoadOperation extends WorkspaceModifyOperation {
 								} catch (CoreException e) {
 								} catch (IOException e) {
 								}
+								monitor.worked(1);
 							}
 						}
 
@@ -219,6 +221,7 @@ public class LoadOperation extends WorkspaceModifyOperation {
 
 			}
 			if (formFile != null) {
+				monitor.subTask("load form: " + nextFormToParse);
 				XmlPullParser xpp;
 				try {
 					xpp = Plugin.getDefault().getXmlPullParserPool().getPullParserFromPool();
@@ -227,6 +230,7 @@ public class LoadOperation extends WorkspaceModifyOperation {
 				} catch (CoreException e) {
 				} catch (IOException e) {
 				}
+				monitor.worked(1);
 			}
 
 		}
@@ -234,6 +238,7 @@ public class LoadOperation extends WorkspaceModifyOperation {
 		//Parse SECAs
 
 		for (IFile secaFile : secasToParse) {
+			monitor.subTask("load seca: " + secaFile.getName());
 			SecaParser secaParser = new SecaParser();
 			XmlPullParser xpp;
 			try {
@@ -243,6 +248,7 @@ public class LoadOperation extends WorkspaceModifyOperation {
 			} catch (CoreException e) {
 			} catch (IOException e) {
 			}
+			monitor.worked(1);
 		}
 
 		// everything is ok so we can add the loaded project to the root
@@ -470,7 +476,7 @@ public class LoadOperation extends WorkspaceModifyOperation {
 
 	private void loadEntityModel(Component component, IFile file) {
 		try {
-			EntityParser parser = new EntityParser(component);
+			EntityParser parser = new EntityParser(component, file);
 			XmlPullParser xpp = Plugin.getDefault()
 					.getXmlPullParserPool().getPullParserFromPool();
 			parser.processDocument(xpp, file);

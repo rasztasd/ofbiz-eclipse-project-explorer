@@ -101,7 +101,7 @@ public class ScreenParser extends Parser {
 		curScreen.setFile(file);
 		String markerKey = curScreen.getName();
 		curScreen.setMarkerKey(markerKey);
-		curScreen.setNameToShow(currentScreenFile.getNameToShow()  + "#" + curScreen.getName());
+		curScreen.setNameToShow(curScreen.getName());
 		/*curScreen.setEngine(xpp.getAttributeValue(null, "engine"));
 		String location = xpp.getAttributeValue(null, "location");
 		if(location!=null)

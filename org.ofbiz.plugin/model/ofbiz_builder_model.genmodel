@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.ofbiz.plugin/gen"
+    editDirectory="/org.ofbiz.plugin.edit/gen" editorDirectory="/org.ofbiz.plugin.editor/gen"
+    modelPluginID="org.ofbiz.plugin" modelName="Ofbiz_builder_model" featureMapWrapperInterface=""
+    testsDirectory="" testSuiteClass="" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>ofbiz_builder_model.ecore</foreignModel>
+  <genPackages prefix="Ofbiz_builder_model" disposableProviderFactory="true" ecorePackage="ofbiz_builder_model.ecore#/">
+    <genDataTypes ecoreDataType="ofbiz_builder_model.ecore#//IJavaProject"/>
+  </genPackages>
+</genmodel:GenModel>

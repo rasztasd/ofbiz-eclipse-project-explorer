@@ -379,6 +379,14 @@
         value="true">
 	 </persistent>
   </extension>
+   <extension
+        id="iEntityMarker"
+        point="org.eclipse.core.resources.markers">
+	 <super type="org.ofbiz.plugin.text"></super>
+	 <persistent
+        value="true">
+	 </persistent>
+  </extension>
   
   <extension
         point="org.eclipse.debug.core.launchConfigurationTypes">

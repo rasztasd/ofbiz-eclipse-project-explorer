@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ofbiz_builder_model"
+    nsURI="https://github.com/rasztasd/ofbiz-eclipse-project-explorer" nsPrefix="org.ofbiz.plugin.builder.model">
+  <eClassifiers xsi:type="ecore:EDataType" name="IJavaProject" instanceClassName="org.eclipse.jdt.core.IJavaProject"
+      serializable="false"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OfbizProject">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="javaProject" lowerBound="1"
+        eType="#//IJavaProject" transient="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReferencableElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerKey" lowerBound="1"
+        eType="#//IFile"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="IFile" instanceClassName="org.eclipse.core.resources.IFile"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Reference">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="referenced" lowerBound="1"
+        eType="#//ReferencableElement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="references" upperBound="-1"
+        eType="#//ReferencableElement"/>
+  </eClassifiers>
+</ecore:EPackage>

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OFBiz IDE Plugin
 Bundle-SymbolicName: org.ofbiz.plugin;singleton:=true
-Bundle-Version: 1.2.1.12
+Bundle-Version: 1.2.2.1
 Bundle-Activator: org.ofbiz.plugin.Plugin
 Bundle-Vendor: Daniel McAllister
 Require-Bundle: org.eclipse.jface.text;visibility:=reexport,

@@ -46,8 +46,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="service" lowerBound="1"
         eType="#//Service" eOpposite="#//Service/autoAttributes"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="entity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="project" lowerBound="1"
-        eType="#//Project" eOpposite="#//Project/entityRefs"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExtendEntity" eSuperTypes="#//IEntity"/>
   <eClassifiers xsi:type="ecore:EClass" name="Field" eSuperTypes="#//NamedElement #//TypedElement">
@@ -78,8 +76,6 @@
         eOpposite="#//Root/projects"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="project" lowerBound="1"
         eType="#//IProject" transient="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entityRefs" upperBound="-1"
-        eType="#//EntityRef" containment="true" eOpposite="#//EntityRef/project"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Root">
     <eStructuralFeatures xsi:type="ecore:EReference" name="projects" upperBound="-1"

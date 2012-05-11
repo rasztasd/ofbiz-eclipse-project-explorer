@@ -17,7 +17,7 @@
  */
 package org.ofbiz.plugin.parser;
 
-import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IFile;
 import org.ofbiz.plugin.ofbiz.Component;
 import org.ofbiz.plugin.ofbiz.Entity;
 import org.ofbiz.plugin.ofbiz.Field;
@@ -39,42 +39,35 @@ public class EntityParser extends Parser {
 	private Component component;
 	private IEntity current;
 	
-	public EntityParser(Component component) {
+	public EntityParser(Component component, IFile file) {
 		this.component = component;
+		this.file = file;
 	}
 	
 	@Override
 	protected void processStartElement(XmlPullParser xpp) {
-		IMarker createMarker = null;
 		String markerKey = null;
-		String viewType = null;
-		boolean entity = true;
+		boolean entity = false;
 		if (xpp.getName().equals(ENTITY)) {
-			
+			entity = true;
 			assert current == null;
 			this.current = OfbizFactory.eINSTANCE.createEntity();
-			this.current.setName(xpp.getAttributeValue(null, ENTITYNAME));
-			createMarker = createMarker(xpp.getLineNumber(), current.getName());
+			this.current.setName(xpp.getAttributeValue(null, ENTITYNAME));			
 			markerKey = current.getName();
-			viewType = "Entity: ";
 			
 		} else if (xpp.getName().equals(VIEW)) {
-			
+			entity = true;
 			assert current == null;
 			this.current = OfbizFactory.eINSTANCE.createViewEntity();
 			this.current.setName(xpp.getAttributeValue(null, ENTITYNAME));
-			createMarker = createMarker(xpp.getLineNumber(), current.getName());
 			markerKey = current.getName();
-			viewType = "View: ";
 			
 		} else if (xpp.getName().equals(EXTEND)) {
-			
+			entity = true;
 			assert current == null;
 			this.current = OfbizFactory.eINSTANCE.createExtendEntity();
 			this.current.setName(xpp.getAttributeValue(null, ENTITYNAME));
-			createMarker = createMarker(xpp.getLineNumber(), current.getName());
 			markerKey = current.getName();
-			viewType = "Extend: ";
 			
 		} else if (xpp.getName().equals("field")) {
 
@@ -89,6 +82,7 @@ public class EntityParser extends Parser {
 			
 			assert current != null;
 			assert current instanceof Entity;
+			entity = false;
 			Entity currentAsEntity = (Entity) current;
 			String fieldName = xpp.getAttributeValue(null, "field");
 			for(Field field : currentAsEntity.getFields()) {
@@ -98,14 +92,12 @@ public class EntityParser extends Parser {
 			}
 			
 		} else if (xpp.getName().equals("member-entity")) {
-			entity = false;
 			ViewEntity currentView = (ViewEntity) current;
 			MemberEntity memberEntity = OfbizFactory.eINSTANCE.createMemberEntity();
 			memberEntity.setEntityAlias(xpp.getAttributeValue(null, "entity-alias"));
 			memberEntity.setEntityName(xpp.getAttributeValue(null, "entity-name"));
 			memberEntity.setViewEntity(currentView);
 		} else if (xpp.getName().equals("view-link")) {
-			entity = false;
 			ViewEntity currentView = (ViewEntity) current;
 			ViewLink viewLink = OfbizFactory.eINSTANCE.createViewLink();
 			viewLink.setViewEntity(currentView);
@@ -113,12 +105,14 @@ public class EntityParser extends Parser {
 			viewLink.setRelEntityAlias(xpp.getAttributeValue(null, "rel-entity-alias"));
 			viewLink.setOptional(Boolean.valueOf(xpp.getAttributeValue(null, "entity-alias")));
 		}
-		if (entity && createMarker != null) {
+		if (entity && current != null) {
+			current.setFile(file);
+			markerKey += component.getName();
 			current.setMarkerKey(markerKey);
+			createMarker(xpp.getLineNumber(), markerKey);
 			current.setNameToShow(current.getName());
 			current.setHyperlinkKey(current.getName());
 			current.setHyperlinkText("Entity ");
-			current.setFile(file);
 		}
 	}
 	
@@ -150,6 +144,6 @@ public class EntityParser extends Parser {
 
 	@Override
 	protected String getMarkerType() {
-		return "org.ofbiz.plugin.entityMarker";
+		return "org.ofbiz.plugin.iEntityMarker";
 	}
 }

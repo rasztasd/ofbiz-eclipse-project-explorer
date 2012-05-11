@@ -143,7 +143,6 @@ public class ServiceParser extends Parser {
 		curAutoAttr.setService(curService);
 		curAutoAttr.setInclude(Include.get(xpp.getAttributeValue(null, "include")));
 		curAutoAttr.setMode(ServiceMode.get(xpp.getAttributeValue(null, "mode")));
-		curAutoAttr.setProject(component.getDirectory().getProject());
 		String optional = xpp.getAttributeValue(null, "optional");
 		if (optional!=null && optional.equals("true")) {
 			curAutoAttr.setOptional(true);

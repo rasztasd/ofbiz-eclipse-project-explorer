@@ -11,6 +11,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.ofbiz.plugin.model.OfbizModelSingleton;
+import org.ofbiz.plugin.nature.OfbizNature;
 import org.ofbiz.plugin.ofbiz.Project;
 
 
@@ -23,19 +24,24 @@ public class RefreshAction extends Action {
 		view.getRoot().getProjects().clear();
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		for (IProject project : workspaceRoot.getProjects()) {
-			LoadOperation loadOperation = new LoadOperation(project);
 			try {
-				new ProgressMonitorDialog(view.getSite().getShell()).run(true, true, loadOperation);
+				if (project.getNature(OfbizNature.ID) != null) {
+					LoadOperation loadOperation = new LoadOperation(project);
+					new ProgressMonitorDialog(view.getSite().getShell()).run(true, true, loadOperation);
+				}
+				Project ofbizProject = OfbizModelSingleton.get().findProjectByEclipseProjectName(project.getName());
+				if (ofbizProject != null) {
+					ofbizProject.setRoot(view.getRoot());
+				}
 			} catch (InvocationTargetException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			Project ofbizProject = OfbizModelSingleton.get().findProjectByEclipseProjectName(project.getName());
-			if (ofbizProject != null) {
-				ofbizProject.setRoot(view.getRoot());
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
