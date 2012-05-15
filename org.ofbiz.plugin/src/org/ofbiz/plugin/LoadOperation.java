@@ -1,9 +1,7 @@
 package org.ofbiz.plugin;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +13,11 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.FeatureMapUtil.BasicValidator;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -42,7 +41,6 @@ import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.SearchRequestor;
 import org.eclipse.jdt.internal.core.ResolvedSourceMethod;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.ofbiz.plugin.model.ComponentHelper;
 import org.ofbiz.plugin.model.OfbizModelSingleton;
 import org.ofbiz.plugin.ofbiz.AbstractViewMap;
@@ -51,7 +49,6 @@ import org.ofbiz.plugin.ofbiz.Controller;
 import org.ofbiz.plugin.ofbiz.Directory;
 import org.ofbiz.plugin.ofbiz.OfbizFactory;
 import org.ofbiz.plugin.ofbiz.Project;
-import org.ofbiz.plugin.ofbiz.Root;
 import org.ofbiz.plugin.ofbiz.ScreenViewMap;
 import org.ofbiz.plugin.ofbiz.Service;
 import org.ofbiz.plugin.ofbiz.ServiceInvocation;
@@ -69,7 +66,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 
-public class LoadOperation extends WorkspaceModifyOperation {
+public class LoadOperation extends Job {
 
 	private Map<String, Service> serviceByName;
 	private Set<String> alreadyParsedJavaFiles = new HashSet<String>();
@@ -78,12 +75,12 @@ public class LoadOperation extends WorkspaceModifyOperation {
 	private IProject project;
 
 	public LoadOperation(IProject project) {
+		super("Load Ofbiz resources");
 		this.project = project;
 	}
 
 	@Override
-	protected void execute(IProgressMonitor monitor)
-			throws CoreException, InvocationTargetException, InterruptedException {
+	protected IStatus run(IProgressMonitor monitor) {
 
 		monitor.beginTask("load OFBiz projects:", IProgressMonitor.UNKNOWN);
 
@@ -93,6 +90,7 @@ public class LoadOperation extends WorkspaceModifyOperation {
 		load(project, monitor);
 
 		monitor.done();
+		return Status.OK_STATUS;
 
 	}		
 

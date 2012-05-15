@@ -186,23 +186,23 @@ public class OfbizBuilder extends IncrementalProjectBuilder {
 	protected void fullBuild(final IProgressMonitor monitor)
 			throws CoreException {
 		//		try {
-		IProject project = getProject();
-		Project ofbizProject = OfbizModelSingleton.get().findProjectByEclipseProjectName(project.getName());
-		if (ofbizProject == null) {
-			ofbizProject = OfbizFactory.eINSTANCE.createProject();
-			OfbizModelSingleton.get().addProject(project.getName(), ofbizProject);
-		}
-
-		try {
-			LoadOperation loadOperation = new LoadOperation(project);
-			loadOperation.run(monitor);
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		IProject project = getProject();
+//		Project ofbizProject = OfbizModelSingleton.get().findProjectByEclipseProjectName(project.getName());
+//		if (ofbizProject == null) {
+//			ofbizProject = OfbizFactory.eINSTANCE.createProject();
+//			OfbizModelSingleton.get().addProject(project.getName(), ofbizProject);
+//		}
+//
+//		try {
+//			LoadOperation loadOperation = new LoadOperation(project);
+//			loadOperation.run(monitor);
+//		} catch (InvocationTargetException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		//			project.accept(new ControllerXmlVisitor());
 		//		} catch (CoreException e) {
 		//		}
