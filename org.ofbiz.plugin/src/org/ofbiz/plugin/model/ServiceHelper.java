@@ -16,6 +16,8 @@ import org.ofbiz.plugin.ofbiz.Component;
 import org.ofbiz.plugin.ofbiz.Directory;
 import org.ofbiz.plugin.ofbiz.Project;
 import org.ofbiz.plugin.ofbiz.Service;
+import org.ofbiz.plugin.ofbiz.ServiceEvent;
+import org.ofbiz.plugin.ofbiz.ServiceFile;
 import org.ofbiz.plugin.ofbiz.util.OfbizSwitch;
 
 public class ServiceHelper {
@@ -26,17 +28,17 @@ public class ServiceHelper {
 			while (eAllContents.hasNext()) {
 				EObject eObject = eAllContents.next();
 				OfbizSwitch<Service> ofbizSwitch = new OfbizSwitch<Service>() {
-					
+
 					@Override
 					public Service caseService(Service object) {
-						if (name.equals(object.getName())) {
+						if (name.equals(object.getName()) && !(object instanceof ServiceEvent)) {
 							return object;
 						}
 						return null;
 					}
-					
+
 				};
-				
+
 				Service doSwitch = ofbizSwitch.doSwitch(eObject);
 				if (doSwitch != null) {
 					retValue.add(doSwitch);
@@ -56,14 +58,16 @@ public class ServiceHelper {
 			public int compare(Service o1, Service o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
-			
+
 		};
 		SortedSet<Service> retValue = new TreeSet<Service>(comparator);
 		Project project = OfbizModelSingleton.get().findActiveEclipseProject();
 		for (Directory directory : project.getDirectories()) {
 			for (Component component : directory.getComponents()) {
-				for (Service service : component.getServices()) {
-					retValue.add(service);
+				for (ServiceFile serviceFile : component.getServiceFiles()) {
+					for (Service service : serviceFile.getServices()) {
+						retValue.add(service);
+					}
 				}
 			}
 		}
@@ -73,17 +77,19 @@ public class ServiceHelper {
 		Project project = OfbizModelSingleton.get().findProjectByEclipseProjectName(projectName);
 		for (Directory directory : project.getDirectories()) {
 			for (Component component : directory.getComponents()) {
-				for (Service service : component.getServices()) {
-					String invoke = service.getInvoke();
-					if (invoke != null && invoke.equals(methodName)) {
-						return service;
+				for (ServiceFile serviceFile : component.getServiceFiles()) {
+					for (Service service : serviceFile.getServices()) {
+						String invoke = service.getInvoke();
+						if (invoke != null && invoke.equals(methodName)) {
+							return service;
+						}
 					}
 				}
 			}
 		}
 		return null;
 	}
-	
+
 	public static Service isServiceFile(final IFile file) {
 		Project project = OfbizModelSingleton.get().findActiveEclipseProject();
 		if (project != null) {
@@ -91,7 +97,7 @@ public class ServiceHelper {
 			while (eAllContents.hasNext()) {
 				EObject eObject = eAllContents.next();
 				OfbizSwitch<Service> ofbizSwitch = new OfbizSwitch<Service>() {
-					
+
 					@Override
 					public Service caseService(Service object) {
 						if (file.equals(object.getFile())) {
@@ -99,9 +105,9 @@ public class ServiceHelper {
 						}
 						return null;
 					}
-					
+
 				};
-				
+
 				Service doSwitch = ofbizSwitch.doSwitch(eObject);
 				if (doSwitch != null) {
 					return doSwitch;

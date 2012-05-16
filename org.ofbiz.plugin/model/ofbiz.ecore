@@ -11,12 +11,8 @@
         eType="#//Service" eOpposite="#//Service/attributes"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Component" eSuperTypes="#//NamedElement #//FolderElement #//HasXmlDefinition">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="services" upperBound="-1"
-        eType="#//Service" containment="true" eOpposite="#//Service/component"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="directory" lowerBound="1"
         eType="#//Directory" eOpposite="#//Directory/components"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entities" upperBound="-1"
-        eType="#//IEntity" containment="true" eOpposite="#//IEntity/component"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependsOn" upperBound="-1"
         eType="#//Component"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="webapps" upperBound="-1"
@@ -27,6 +23,10 @@
         eType="#//FormFile" containment="true" eOpposite="#//FormFile/component"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="classpathEntries" upperBound="-1"
         eType="#//ClasspathEntry" containment="true" eOpposite="#//ClasspathEntry/component"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="serviceFiles" upperBound="-1"
+        eType="#//ServiceFile" containment="true" eOpposite="#//ServiceFile/component"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityFiles" upperBound="-1"
+        eType="#//EntityFile" containment="true" eOpposite="#//EntityFile/component"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Directory" eSuperTypes="#//NamedElement #//FolderElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="components" upperBound="-1"
@@ -58,8 +58,8 @@
         transient="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IEntity" eSuperTypes="#//NamedElement #//HasXmlDefinition">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="component" lowerBound="1"
-        eType="#//Component" eOpposite="#//Component/entities"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityFile" lowerBound="1"
+        eType="#//EntityFile" eOpposite="#//EntityFile/entities"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="fields" lowerBound="1"
         upperBound="-1" eType="#//Field" containment="true" eOpposite="#//Field/entity"/>
   </eClassifiers>
@@ -87,8 +87,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         transient="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="invoke" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="component" lowerBound="1"
-        eType="#//Component" eOpposite="#//Component/services"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="serviceFile" lowerBound="1"
+        eType="#//ServiceFile" eOpposite="#//ServiceFile/services"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="implements" upperBound="-1"
         eType="#//Service" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="autoAttributes" upperBound="-1"
@@ -283,5 +283,17 @@
   <eClassifiers xsi:type="ecore:EClass" name="Referencable" eSuperTypes="#//HasXmlDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="#//ReferenceIn"
         containment="true" eOpposite="#//ReferenceIn/referenceIn"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ServiceFile" eSuperTypes="#//HasXmlDefinition #//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="services" upperBound="-1"
+        eType="#//Service" containment="true" eOpposite="#//Service/serviceFile"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Component"
+        eOpposite="#//Component/serviceFiles"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EntityFile" eSuperTypes="#//HasXmlDefinition #//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entities" upperBound="-1"
+        eType="#//IEntity" containment="true" eOpposite="#//IEntity/entityFile"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Component"
+        eOpposite="#//Component/entityFiles"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -132,7 +132,7 @@ public class OfbizHyperlinkDetector extends AbstractHyperlinkDetector {
 						}
 					}
 				} else if (fileName.endsWith("xml") && (hyperlinkMarkers = handleControllerXml(selectedWord, file,
-						fileName, doc, offset)) != null) {
+						fileName, doc, offset)) != null && hyperlinkMarkers.size() != 0) {
 				} else if(fileName.endsWith(".bsh")) {
 					int lineOfOffset = doc.getLineOfOffset(wordRegion.getOffset());
 					IRegion lineInfo = doc.getLineInformationOfOffset(wordRegion.getOffset());
@@ -152,7 +152,7 @@ public class OfbizHyperlinkDetector extends AbstractHyperlinkDetector {
 						Node currentNode = ClassHandleXml.getCurrentNode(doc, offset);
 						if ("simple".equals(currentNode.getAttributes().getNamedItem("engine").getNodeValue())) {
 							if (currentNode.getAttributes().getNamedItem("invoke").getNodeValue().equals(selectedWord)) {
-								Component component = serviceFile.getComponent();
+								Component component = serviceFile.getServiceFile().getComponent();
 								String location = currentNode.getAttributes().getNamedItem("location").getNodeValue();
 								for (ClasspathEntry classpathEntry : component.getClasspathEntries()) {
 									IResource findMember = component.getFolder().findMember(classpathEntry.getClasspathLocation() + "/" + location);

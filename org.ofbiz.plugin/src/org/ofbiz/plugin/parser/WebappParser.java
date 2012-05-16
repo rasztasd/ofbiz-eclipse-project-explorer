@@ -28,6 +28,7 @@ import org.ofbiz.plugin.ofbiz.RequestMap;
 import org.ofbiz.plugin.ofbiz.ScreenViewMap;
 import org.ofbiz.plugin.ofbiz.Service;
 import org.ofbiz.plugin.ofbiz.ServiceEvent;
+import org.ofbiz.plugin.ofbiz.ServiceFile;
 import org.ofbiz.plugin.ofbiz.ViewResponse;
 import org.ofbiz.plugin.ofbiz.WebApp;
 import org.ofbiz.plugin.parser.model.WebappModel;
@@ -63,7 +64,7 @@ public class WebappParser extends Parser {
 			controller2.setWebapp(null);
 			controller2.setReferencedWebapp(null);
 		}
-		
+
 		this.referencingController = referencingController;
 
 		controller = OfbizFactory.eINSTANCE.createController();
@@ -75,7 +76,7 @@ public class WebappParser extends Parser {
 			webApp.setController(controller);
 		} else {
 			webApp.getReferencedControllers().add(controller);
-			
+
 		}
 		controller.setWebapp(webApp);
 		String markerKey = webApp.getName();
@@ -91,7 +92,7 @@ public class WebappParser extends Parser {
 		}
 		viewResponsesByValue.get(value).add(viewResponse);
 	}
-	
+
 	public Set<WebappModel> getincludeLocations() {
 		return this.includeLocations;
 	}
@@ -132,18 +133,20 @@ public class WebappParser extends Parser {
 				markerKey = "event" + curRequestMap.getMarkerKey();
 				serviceEvent.setFile(file);
 				curRequestMap.setEvent(serviceEvent);
-				String serviceName = xpp.getAttributeValue(null, "invoke"); 
-				for (Service service : component.getServices()) {
-					if (serviceName.equals(service.getName())) {
-						serviceEvent.setComponent(service.getComponent());
-						serviceEvent.setEngine(service.getEngine());
-						serviceEvent.setEntity(service.getEntity());
-						serviceEvent.setInvoke(service.getInvoke());
-						serviceEvent.setLocation(service.getLocation());
-						serviceEvent.setName(service.getName());
-						serviceEvent.setRequestMap(curRequestMap);
-						service.getReference().getReferences().add(serviceEvent);
-						break;
+				String serviceName = xpp.getAttributeValue(null, "invoke");
+				for (ServiceFile serviceFile : component.getServiceFiles()) {
+					for (Service service : serviceFile.getServices()) {
+						if (serviceName.equals(service.getName())) {
+							serviceEvent.setEngine(service.getEngine());
+							serviceEvent.setServiceFile(serviceFile);
+							serviceEvent.setEntity(service.getEntity());
+							serviceEvent.setInvoke(service.getInvoke());
+							serviceEvent.setLocation(service.getLocation());
+							serviceEvent.setName(service.getName());
+							serviceEvent.setRequestMap(curRequestMap);
+							service.getReference().getReferences().add(serviceEvent);
+							break;
+						}
 					}
 				}
 			} else { //TODO implement other type of events like: java

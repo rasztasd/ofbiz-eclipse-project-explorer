@@ -48,11 +48,13 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -64,8 +66,10 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.ViewPart;
@@ -75,6 +79,7 @@ import org.ofbiz.plugin.analysis.Analysis;
 import org.ofbiz.plugin.dnd.DragSource;
 import org.ofbiz.plugin.dnd.DropViewAdapter;
 import org.ofbiz.plugin.dnd.OfbizTransfer;
+import org.ofbiz.plugin.model.CurrentFileHelper;
 import org.ofbiz.plugin.model.OfbizModelSingleton;
 import org.ofbiz.plugin.ofbiz.Attribute;
 import org.ofbiz.plugin.ofbiz.Component;
@@ -299,16 +304,16 @@ public class ExplorerView extends ViewPart {
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(refreshAction);
-		manager.add(filterAction);
-		manager.add(analyzeAllAction);
+//		manager.add(filterAction);
+//		manager.add(analyzeAllAction);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(refreshAction);
-		manager.add(filterAction);
-		manager.add(analyzeAllAction);
+//		manager.add(filterAction);
+//		manager.add(analyzeAllAction);
 	}
 
 	private void makeActions() {
@@ -321,32 +326,32 @@ public class ExplorerView extends ViewPart {
 		//
 		filterAction = new Action() {
 			public void run() {
-//				TreeViewer viewer = filteredTree.getViewer();
-//				if(filterOn) {
-//					viewer.removeFilter(filter);
-//					viewer.refresh();
-//				} else {
-//					viewer.addFilter(filter);
-//					viewer.refresh();
-//				}
-//				filterOn = !filterOn;
+				TreeViewer viewer = filteredTree.getViewer();
+				if(filterOn) {
+					viewer.removeFilter(filter);
+					viewer.refresh();
+				} else {
+					viewer.addFilter(filter);
+					viewer.refresh();
+				}
+				filterOn = !filterOn;
 				root.getProjects().clear();
-				ResourceSet resSet = new ResourceSetImpl();
+//				ResourceSet resSet = new ResourceSetImpl();
 				// Create a resource
-				Resource resource = resSet.createResource(URI
-						.createURI("ofbizContent/ofbizContent.ofbiz"));
-				for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-					Project ofbizProject = OfbizModelSingleton.get().findProjectByEclipseProjectName(project.getName());
-					if (ofbizProject != null) {
-						resource.getContents().add(ofbizProject);
-					}
-				}
-				try {
-					resource.save(Collections.EMPTY_MAP);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//				Resource resource = resSet.createResource(URI
+//						.createURI("ofbizContent/ofbizContent.ofbiz"));
+//				for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+//					Project ofbizProject = OfbizModelSingleton.get().findProjectByEclipseProjectName(project.getName());
+//					if (ofbizProject != null) {
+//						resource.getContents().add(ofbizProject);
+//					}
+//				}
+//				try {
+//					resource.save(Collections.EMPTY_MAP);
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 			}
 		};
 		filterAction.setText("Filter");
@@ -354,27 +359,27 @@ public class ExplorerView extends ViewPart {
 		filterAction.setImageDescriptor(Plugin.create("icons/filter.gif"));
 		
 		//
-		analyzeAllAction = new Action() {
-			public void run() {
-				ResourceSet resSet = new ResourceSetImpl();
-				// Get the resource
-				try {
-					Resource resource = resSet.getResource(URI
-							.createURI("ofbizContent/ofbizContent.ofbiz"), true);
-					for (EObject object : resource.getContents()) {
-						if (object instanceof Project) {
-							Project project = (Project) object;
-							OfbizModelSingleton.get().addProject(project.getProject().getName(), project);
-							
-						}
-					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}}
-		};
-		analyzeAllAction.setText("Analyze all");
-		analyzeAllAction.setToolTipText("Analyze all java-based serviceimplementations");
-		analyzeAllAction.setImageDescriptor(Plugin.create("icons/analyzeall.gif"));
+//		analyzeAllAction = new Action() {
+//			public void run() {
+////				ResourceSet resSet = new ResourceSetImpl();
+////				// Get the resource
+////				try {
+////					Resource resource = resSet.getResource(URI
+////							.createURI("ofbizContent/ofbizContent.ofbiz"), true);
+////					for (EObject object : resource.getContents()) {
+////						if (object instanceof Project) {
+////							Project project = (Project) object;
+////							OfbizModelSingleton.get().addProject(project.getProject().getName(), project);
+////							
+////						}
+////					}
+////				} catch (Exception ex) {
+////					ex.printStackTrace();
+////				}}
+//		};
+//		analyzeAllAction.setText("Analyze all");
+//		analyzeAllAction.setToolTipText("Analyze all java-based serviceimplementations");
+//		analyzeAllAction.setImageDescriptor(Plugin.create("icons/analyzeall.gif"));
 		
 		// 
 		doubleClickAction = new Action() {
@@ -387,6 +392,27 @@ public class ExplorerView extends ViewPart {
 				}
 			}
 		};
+		IWorkbenchWindow activeWorkbenchWindow = Plugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+		ISelectionListener listener = new ISelectionListener() {
+			
+			@Override
+			public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+				if (selection instanceof TextSelection) {
+					TextSelection textSelection = (TextSelection) selection;
+					textSelection.getText();
+					ISelection selection2 = ExplorerView.this.filteredTree.getViewer().getSelection();
+					if (selection2 instanceof TreeSelection) {
+						TreeSelection treeSelection = (TreeSelection) selection2;
+//						TreeSelection selection3 = new TreeSelection(new TreePath(new Object[] {}));
+//						filteredTree.getViewer().setSelection(selection3);
+						CurrentFileHelper.getCurrentElement();
+					}
+					System.out.println();
+				}
+			}
+		};
+		activeWorkbenchWindow.getSelectionService().addSelectionListener(listener);
+		activeWorkbenchWindow.getSelectionService().addPostSelectionListener(listener);
 	}
 
 	private void hookDoubleClickAction() {

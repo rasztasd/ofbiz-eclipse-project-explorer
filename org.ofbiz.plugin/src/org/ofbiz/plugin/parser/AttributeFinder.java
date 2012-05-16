@@ -44,7 +44,7 @@ public class AttributeFinder {
 		if (!service.getExtends().isEmpty()) {
 			for(String superServiceName : service.getExtends()) {
 				ServiceFinder serviceFinder = 
-					new ServiceFinder(service.getComponent(),superServiceName);
+					new ServiceFinder(service.getServiceFile().getComponent(),superServiceName);
 				if(serviceFinder.getService() == null) {
 					throw new FinderException(
 					"Unable to locate service "+superServiceName);
@@ -63,7 +63,7 @@ public class AttributeFinder {
 					? ref.getEntity() : service.getEntity();
 				assert entityName != null;
 				EntityFinder finder = 
-					new EntityFinder(service.getComponent(),entityName);
+					new EntityFinder(service.getServiceFile().getComponent(),entityName);
 				if(finder.getEntity() == null)
 					throw new FinderException(
 					"Unable to locate entity "+entityName+" from auto-attributes on service "+

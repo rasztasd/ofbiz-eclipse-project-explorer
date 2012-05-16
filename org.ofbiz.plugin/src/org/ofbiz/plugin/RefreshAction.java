@@ -27,7 +27,7 @@ public class RefreshAction extends Action {
 			try {
 				if (project.getNature(OfbizNature.ID) != null) {
 					LoadOperation loadOperation = new LoadOperation(project);
-					new ProgressMonitorDialog(view.getSite().getShell()).run(true, true, loadOperation);
+					new ProgressMonitorDialog(view.getSite().getShell()).run(true, true, loadOperation);					
 				}
 				Project ofbizProject = OfbizModelSingleton.get().findProjectByEclipseProjectName(project.getName());
 				if (ofbizProject != null) {

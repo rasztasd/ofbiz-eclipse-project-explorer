@@ -20,28 +20,34 @@ package org.ofbiz.plugin.parser;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.ofbiz.plugin.ofbiz.Attribute;
 import org.ofbiz.plugin.ofbiz.Component;
 import org.ofbiz.plugin.ofbiz.EntityRef;
 import org.ofbiz.plugin.ofbiz.Include;
 import org.ofbiz.plugin.ofbiz.OfbizFactory;
 import org.ofbiz.plugin.ofbiz.Service;
+import org.ofbiz.plugin.ofbiz.ServiceFile;
 import org.ofbiz.plugin.ofbiz.ServiceMode;
 import org.xmlpull.v1.XmlPullParser;
 
 
 public class ServiceParser extends Parser {
 	
-	private final Component component;
 	private Service curService;
+	private ServiceFile serviceFile;
 	private EntityRef curAutoAttr;
 	private Set<String> servicesToPars = new HashSet<String>();
 	
-	public ServiceParser(Component component) {
-		if (component == null) {
-			System.out.println();
-		}
-		this.component = component;
+	public ServiceParser(Component component, IFile file) {
+		this.file = file;
+		serviceFile = OfbizFactory.eINSTANCE.createServiceFile();
+		String markerKey = component.getName() + file.getName();
+		serviceFile.setMarkerKey(markerKey);
+		createMarker(1, markerKey);
+		serviceFile.setComponent(component);
+		serviceFile.setName(file.getName());
+		serviceFile.setFile(file);
 	}
 
 	@Override protected void processStartElement(XmlPullParser xpp) {
@@ -102,12 +108,10 @@ public class ServiceParser extends Parser {
 	private void handleService(XmlPullParser xpp) {
 		curService = OfbizFactory.eINSTANCE.createService();
 		curService.setReference(OfbizFactory.eINSTANCE.createReferenceIn());
-		synchronized (component) {
-			curService.setComponent(component);
-		}
+		curService.setServiceFile(serviceFile);
 		curService.setName(xpp.getAttributeValue(null, "name"));
 		curService.setEngine(xpp.getAttributeValue(null, "engine"));
-		String markerKey = component.getName() + curService.getName();
+		String markerKey = serviceFile.getName() + curService.getName();
 		createMarker(xpp.getLineNumber(), markerKey);
 		curService.setMarkerKey(markerKey);
 		curService.setNameToShow(curService.getName());
