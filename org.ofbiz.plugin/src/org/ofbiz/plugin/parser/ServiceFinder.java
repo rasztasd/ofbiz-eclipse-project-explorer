@@ -21,6 +21,7 @@ import org.ofbiz.plugin.ofbiz.Component;
 import org.ofbiz.plugin.ofbiz.Directory;
 import org.ofbiz.plugin.ofbiz.Project;
 import org.ofbiz.plugin.ofbiz.Service;
+import org.ofbiz.plugin.ofbiz.ServiceFile;
 
 public class ServiceFinder {
 	private Project project;
@@ -45,28 +46,33 @@ public class ServiceFinder {
 	public Service getService() throws FinderException {
 		// 1) search component first
 		if (component!=null) {
-			for(Service s : component.getServices()) {
-				if(serviceName.equals(s.getName()))
-					return s;
+			for (ServiceFile file : component.getServiceFiles()) {
+				for(Service s : file.getServices()) {
+					if(serviceName.equals(s.getName()))
+						return s;
+				}
 			}
 		}
 		// 2) expand to directory
 		if (dir!=null) {
 			for(Component c : dir.getComponents()) {
 				if (c==component) continue; // skip
-				for(Service s : c.getServices()) {
-					if(serviceName.equals(s.getName()))
-						return s;
-				}
-			}
+				for (ServiceFile file : c.getServiceFiles()) {
+					for(Service s : file.getServices()) {
+						if(serviceName.equals(s.getName()))
+							return s;
+					}
+				}}
 		}
 		// 3) search entire project
 		for(Directory d : project.getDirectories()) {
 			if (d==dir) continue;
 			for(Component c : d.getComponents()) {
-				for(Service s : c.getServices()) {
-					if(serviceName.equals(s.getName()))
-						return s;
+				for (ServiceFile file : c.getServiceFiles()) {
+					for(Service s : file.getServices()) {
+						if(serviceName.equals(s.getName()))
+							return s;
+					}
 				}
 			}
 		}

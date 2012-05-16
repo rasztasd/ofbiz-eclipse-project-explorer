@@ -486,7 +486,7 @@ public class LoadOperation extends Job {
 
 	private void loadServiceModel(Component component, IFile file) {
 		try {
-			ServiceParser parser = new ServiceParser(component);
+			ServiceParser parser = new ServiceParser(component, file);
 			XmlPullParser xpp = Plugin.getDefault()
 					.getXmlPullParserPool().getPullParserFromPool();
 			parser.processDocument(xpp, file);

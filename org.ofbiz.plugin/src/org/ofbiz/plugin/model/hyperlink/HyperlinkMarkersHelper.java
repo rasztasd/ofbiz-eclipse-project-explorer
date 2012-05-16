@@ -49,7 +49,7 @@ public class HyperlinkMarkersHelper {
 		List<HyperlinkMarker> retValue = new ArrayList<HyperlinkMarker>();
 		List<Service> services = ServiceHelper.findServiceByName(name);
 		for (Service service : services) {
-			Component component = service.getComponent();
+			Component component = service.getServiceFile().getComponent();
 			if (component != null) {
 				IFolder folder = component.getFolder();
 				String serviceName = service.getName();

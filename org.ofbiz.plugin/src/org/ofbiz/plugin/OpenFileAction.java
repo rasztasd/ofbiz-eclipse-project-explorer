@@ -68,7 +68,7 @@ public class OpenFileAction implements IObjectActionDelegate {
 		new OfbizSwitch<Object>(){
 			@Override
 			public Object caseIEntity(IEntity object) {
-				Component component = object.getComponent();
+				Component component = object.getEntityFile().getComponent();
 				IFolder folder = component.getFolder();
 				String entityName = object.getName();
 				IMarker marker = resolveMarker(folder, entityName, "xml");
@@ -82,7 +82,7 @@ public class OpenFileAction implements IObjectActionDelegate {
 			}
 			@Override
 			public Object caseService(Service object) {
-				Component component = object.getComponent();
+				Component component = object.getServiceFile().getComponent();
 				IFolder folder = component.getFolder();
 				String serviceName = object.getName();
 				if ("org.ofbiz.plugin.action.showserviceimpl".equals(action.getId())) {

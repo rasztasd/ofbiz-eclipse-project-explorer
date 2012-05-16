@@ -53,6 +53,7 @@ public class EntityHelper {
 		}
 		return retValue;
 	}
+//	public static 
 	public static List<IEntity> getIEntities() {
 		List<IEntity> retValue = new ArrayList<IEntity>();
 		Project project = OfbizModelSingleton.get().findActiveEclipseProject();

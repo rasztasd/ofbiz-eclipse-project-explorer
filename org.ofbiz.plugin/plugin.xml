@@ -348,6 +348,22 @@
 	 </persistent>
   </extension>
   <extension
+        id="entityFileMarker"
+        point="org.eclipse.core.resources.markers">
+	 <super type="org.ofbiz.plugin.text"></super>
+	 <persistent
+        value="true">
+	 </persistent>
+  </extension>
+  <extension
+        id="serviceFileMarker"
+        point="org.eclipse.core.resources.markers">
+	 <super type="org.ofbiz.plugin.text"></super>
+	 <persistent
+        value="true">
+	 </persistent>
+  </extension>
+  <extension
         id="formMarker"
         point="org.eclipse.core.resources.markers">
 	 <super type="org.ofbiz.plugin.text"></super>

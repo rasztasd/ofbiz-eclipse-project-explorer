@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 import org.ofbiz.plugin.Plugin;
 import org.ofbiz.plugin.model.OfbizModelSingleton;
@@ -31,42 +32,43 @@ import org.ofbiz.plugin.ofbiz.HasXmlDefinition;
 import org.ofbiz.plugin.ofbiz.RequestMap;
 import org.ofbiz.plugin.ofbiz.Screen;
 import org.ofbiz.plugin.ofbiz.Service;
+import org.ofbiz.plugin.ofbiz.ViewEntity;
 import org.ofbiz.plugin.parser.GoToFile;
 
 public class OpenComponentDialog extends FilteredItemsSelectionDialog {
-	 private static final String DIALOG_SETTINGS = "FilteredResourcesSelectionDialogExampleSettings";
-	 private List<HasXmlDefinition> currentlySelectedElements = new ArrayList<HasXmlDefinition>();
+	private static final String DIALOG_SETTINGS = "FilteredResourcesSelectionDialogExampleSettings";
+	private List<HasXmlDefinition> currentlySelectedElements = new ArrayList<HasXmlDefinition>();
 
 	public OpenComponentDialog(Shell shell, boolean multi,
 			IContainer container, int typesMask) {
 		super(shell, multi);
 		setTitle("Open Ofbiz resource");
 		setListLabelProvider(new ILabelProvider() {
-			
+
 			@Override
 			public void removeListener(ILabelProviderListener arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public boolean isLabelProperty(Object arg0, String arg1) {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public void dispose() {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void addListener(ILabelProviderListener arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public String getText(Object arg0) {
 				if (arg0 == null) {
@@ -75,7 +77,7 @@ public class OpenComponentDialog extends FilteredItemsSelectionDialog {
 				HasXmlDefinition definition = (HasXmlDefinition) arg0;
 				return definition.getNameToShow();
 			}
-			
+
 			@Override
 			public Image getImage(Object arg0) {
 				if (arg0 == null) {
@@ -86,31 +88,31 @@ public class OpenComponentDialog extends FilteredItemsSelectionDialog {
 			}
 		});
 		setDetailsLabelProvider(new ILabelProvider() {
-			
+
 			@Override
 			public void removeListener(ILabelProviderListener arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public boolean isLabelProperty(Object arg0, String arg1) {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public void dispose() {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void addListener(ILabelProviderListener arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public String getText(Object arg0) {
 				StringBuilder sb = new StringBuilder();
@@ -118,7 +120,13 @@ public class OpenComponentDialog extends FilteredItemsSelectionDialog {
 				if (arg0 instanceof Service) {
 					sb.append("Service");
 				} else if (arg0 instanceof RequestMap) {
+					RequestMap requestMap = (RequestMap) arg0;
 					sb.append("RequestMap");
+					sb.append(" ").append(requestMap.getController().getComponent().getName());
+				} else if (arg0 instanceof Screen) {
+					sb.append("Screen");
+				} else if (arg0 instanceof ViewEntity) {
+					sb.append("View Entity");
 				} else if (arg0 instanceof Screen) {
 					sb.append("Screen");
 				} else if (arg0 instanceof Entity) {
@@ -129,22 +137,30 @@ public class OpenComponentDialog extends FilteredItemsSelectionDialog {
 				sb.append(" ").append(hasXmlDefinition.getFile().getName());
 				return sb.toString();
 			}
-			
+
 			@Override
 			public Image getImage(Object arg0) {
 				// TODO Auto-generated method stub
 				return null;
 			}
 		});
-		IEditorSite editorSite = Plugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getSite().getWorkbenchWindow().getActivePage().getActiveEditor().getEditorSite();
-		ISelectionProvider selectionProvider = editorSite.getSelectionProvider();
-		ISelection selection = selectionProvider.getSelection();
-		if (selection instanceof TextSelection) {
-			TextSelection textSelection = (TextSelection) selection;
-			String string = textSelection.getText();
-			setInitialPattern(string);
+		try {
+			IWorkbenchWindow activeWorkbenchWindow = Plugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+			IEditorPart activeEditor2 = activeWorkbenchWindow.getActivePage().getActiveEditor();
+			if (activeEditor2 == null) {
+				return;
+			}
+			IEditorPart activeEditor = activeEditor2.getSite().getWorkbenchWindow().getActivePage().getActiveEditor();
+			IEditorSite editorSite = activeEditor.getEditorSite();
+			ISelectionProvider selectionProvider = editorSite.getSelectionProvider();
+			ISelection selection = selectionProvider.getSelection();
+			if (selection instanceof TextSelection) {
+				TextSelection textSelection = (TextSelection) selection;
+				String string = textSelection.getText();
+				setInitialPattern(string);
+			}
+		} catch (Exception x) {
 		}
-		System.out.println();
 	}
 
 	@Override
@@ -178,8 +194,8 @@ public class OpenComponentDialog extends FilteredItemsSelectionDialog {
 		};
 	}
 
-	
-	
+
+
 	@Override
 	protected StructuredSelection getSelectedItems() {
 		// TODO Auto-generated method stub
@@ -212,7 +228,7 @@ public class OpenComponentDialog extends FilteredItemsSelectionDialog {
 		HasXmlDefinition hasXmlDefinition = (HasXmlDefinition) item;
 		return hasXmlDefinition.getNameToShow();
 	}
-	
+
 	protected Comparator getItemsComparator() {
 		return new Comparator() {
 			public int compare(Object arg0, Object arg1) {

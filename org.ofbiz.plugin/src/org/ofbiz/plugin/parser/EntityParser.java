@@ -20,6 +20,7 @@ package org.ofbiz.plugin.parser;
 import org.eclipse.core.resources.IFile;
 import org.ofbiz.plugin.ofbiz.Component;
 import org.ofbiz.plugin.ofbiz.Entity;
+import org.ofbiz.plugin.ofbiz.EntityFile;
 import org.ofbiz.plugin.ofbiz.Field;
 import org.ofbiz.plugin.ofbiz.IEntity;
 import org.ofbiz.plugin.ofbiz.MemberEntity;
@@ -36,12 +37,18 @@ public class EntityParser extends Parser {
 		ENTITY = "entity",
 		VIEW = "view-entity",
 		EXTEND = "extend-entity";
-	private Component component;
+	private EntityFile entityFile;
 	private IEntity current;
 	
 	public EntityParser(Component component, IFile file) {
-		this.component = component;
 		this.file = file;
+		entityFile = OfbizFactory.eINSTANCE.createEntityFile();
+		entityFile.setFile(file);
+		String entityFileMarkerKey = "Entity" + file.getName() + component.getName();
+		createMarker(1, entityFileMarkerKey);
+		entityFile.setMarkerKey(entityFileMarkerKey);
+		entityFile.setName(file.getName());
+		entityFile.setComponent(component);
 	}
 	
 	@Override
@@ -107,7 +114,7 @@ public class EntityParser extends Parser {
 		}
 		if (entity && current != null) {
 			current.setFile(file);
-			markerKey += component.getName();
+			markerKey += entityFile.getName();
 			current.setMarkerKey(markerKey);
 			createMarker(xpp.getLineNumber(), markerKey);
 			current.setNameToShow(current.getName());
@@ -122,21 +129,19 @@ public class EntityParser extends Parser {
 		if (xpp.getName().equals(ENTITY)) {
 			
 			assert this.current != null;
-			synchronized (component) {
-				current.setComponent(component);
-			}
+			current.setEntityFile(entityFile);
 			this.current = null;
 			
 		} else if (xpp.getName().equals(VIEW)) {
 			
 			assert this.current != null;
-			current.setComponent(component);
+			current.setEntityFile(entityFile);
 			this.current = null;
 			
 		} else if (xpp.getName().equals(EXTEND)) {
 			
 			assert this.current != null;
-			current.setComponent(component);
+			current.setEntityFile(entityFile);
 			this.current = null;
 			
 		}

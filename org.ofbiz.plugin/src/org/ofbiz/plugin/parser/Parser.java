@@ -28,6 +28,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.ofbiz.plugin.Plugin;
 import org.ofbiz.plugin.ofbiz.Component;
+import org.ofbiz.plugin.ofbiz.HasXmlDefinition;
 import org.ofbiz.plugin.ofbiz.Project;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -78,10 +79,6 @@ public abstract class Parser {
 	
 	protected IMarker createMarker(int lineno, String name) {
 		if (!Plugin.USE_MARKERS) return null;
-		if (file==null) {
-			//Plugin.logError("Skipped marker creation for "+name+" because of missing file",null);
-			return null;
-		}
 		try {
 			IMarker marker = file.createMarker(getMarkerType());
 			marker.setAttribute(IMarker.LINE_NUMBER, lineno);
@@ -94,6 +91,35 @@ public abstract class Parser {
 			return null;
 		}
 	}
+	
+//	protected IMarker createMarker(XmlPullParser xpp, HasXmlDefinition hasXmlDefinition, String markerKey, String attributeName) {
+//		if (!Plugin.USE_MARKERS) {
+//			return null;
+//		}
+//		hasXmlDefinition.setFile(file);
+//		hasXmlDefinition.setMarkerKey(markerKey);
+//		try {
+//			IMarker marker = file.createMarker(getMarkerType());
+//			if (xpp == null) {
+//				marker.setAttribute(IMarker.CHAR_START, 0);
+//				marker.setAttribute(IMarker.CHAR_END, 0);
+//			} else {
+//				String positionDescription = xpp.getPositionDescription();
+//				String[] split = positionDescription.substring(positionDescription.lastIndexOf("@") + 1).split(":");
+//				marker.setAttribute(IMarker.LINE_NUMBER, xpp.getLineNumber());
+//				marker.setAttribute(IMarker.CHAR_START, Integer.valueOf(split[0]));
+//				marker.setAttribute(IMarker.CHAR_END, Integer.valueOf(split[1]));
+//			}
+//			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
+//			marker.setAttribute("name", markerKey);
+//			//Plugin.debug("marker created for "+name+" in file "+file.getFullPath());
+//			return marker;
+//		} catch (CoreException e) {
+//			Plugin.logError("Unable to create marker for "+file.getName(), e);
+//			return null;
+//		}
+//	}
+//	
 
 	/** retrieves model file for either an entity-resource or a service-resource */
 	protected IFile getResourceFile(String location, Component component) {

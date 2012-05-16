@@ -23,7 +23,7 @@ public class GoToFile {
 		return gotoLine(markerKey, file);
 	}
 	public static boolean gotoFile(IEntity entity) {
-		gotoLine(entity.getComponent().getFolder(), entity.getName(), "xml");
+		gotoLine(entity.getEntityFile().getComponent().getFolder(), entity.getName(), "xml");
 		return true;
 	}
 	public static IMarker getMarker(HasXmlDefinition xmlDefinition) {
