@@ -27,6 +27,8 @@
         eType="#//ServiceFile" containment="true" eOpposite="#//ServiceFile/component"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entityFiles" upperBound="-1"
         eType="#//EntityFile" containment="true" eOpposite="#//EntityFile/component"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaFiles" lowerBound="1"
+        eType="#//JavaFiles" containment="true" eOpposite="#//JavaFiles/component"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Directory" eSuperTypes="#//NamedElement #//FolderElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="components" upperBound="-1"
@@ -295,5 +297,21 @@
         eType="#//IEntity" containment="true" eOpposite="#//IEntity/entityFile"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Component"
         eOpposite="#//Component/entityFiles"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JavaFiles" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Component"
+        eOpposite="#//Component/javaFiles"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaFiles" upperBound="-1"
+        eType="#//JavaFile" containment="true" eOpposite="#//JavaFile/javaFiles"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JavaFile" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="serviceJavaImpls" upperBound="-1"
+        eType="#//ServiceJavaImpl" containment="true" eOpposite="#//ServiceJavaImpl/javaFile"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaFiles" eType="#//JavaFiles"
+        eOpposite="#//JavaFiles/javaFiles"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ServiceJavaImpl" eSuperTypes="#//NamedElement #//HasXmlDefinition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaFile" eType="#//JavaFile"
+        eOpposite="#//JavaFile/serviceJavaImpls"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -31,7 +31,9 @@ import org.ofbiz.plugin.ofbiz.Entity;
 import org.ofbiz.plugin.ofbiz.HasXmlDefinition;
 import org.ofbiz.plugin.ofbiz.RequestMap;
 import org.ofbiz.plugin.ofbiz.Screen;
+import org.ofbiz.plugin.ofbiz.Seca;
 import org.ofbiz.plugin.ofbiz.Service;
+import org.ofbiz.plugin.ofbiz.ServiceJavaImpl;
 import org.ofbiz.plugin.ofbiz.ViewEntity;
 import org.ofbiz.plugin.parser.GoToFile;
 
@@ -131,6 +133,10 @@ public class OpenComponentDialog extends FilteredItemsSelectionDialog {
 					sb.append("Screen");
 				} else if (arg0 instanceof Entity) {
 					sb.append("Entity");
+				} else if (arg0 instanceof ServiceJavaImpl) {
+					sb.append("Java Implementation of Service");
+				} else if (arg0 instanceof Seca) {
+					sb.append("Seca");
 				} else {
 					sb.append("TODO");
 				}

@@ -1,7 +1,9 @@
 package org.ofbiz.plugin;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +17,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.FeatureMapUtil.BasicValidator;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -41,22 +41,27 @@ import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.SearchRequestor;
 import org.eclipse.jdt.internal.core.ResolvedSourceMethod;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.ofbiz.plugin.model.ComponentHelper;
 import org.ofbiz.plugin.model.OfbizModelSingleton;
 import org.ofbiz.plugin.ofbiz.AbstractViewMap;
 import org.ofbiz.plugin.ofbiz.Component;
 import org.ofbiz.plugin.ofbiz.Controller;
 import org.ofbiz.plugin.ofbiz.Directory;
+import org.ofbiz.plugin.ofbiz.JavaFiles;
 import org.ofbiz.plugin.ofbiz.OfbizFactory;
 import org.ofbiz.plugin.ofbiz.Project;
+import org.ofbiz.plugin.ofbiz.Root;
 import org.ofbiz.plugin.ofbiz.ScreenViewMap;
 import org.ofbiz.plugin.ofbiz.Service;
+import org.ofbiz.plugin.ofbiz.ServiceFile;
 import org.ofbiz.plugin.ofbiz.ServiceInvocation;
 import org.ofbiz.plugin.ofbiz.WebApp;
 import org.ofbiz.plugin.parser.ComponentParser;
 import org.ofbiz.plugin.parser.DirectoryParser;
 import org.ofbiz.plugin.parser.EntityParser;
 import org.ofbiz.plugin.parser.FormParser;
+import org.ofbiz.plugin.parser.JavaServiceParser;
 import org.ofbiz.plugin.parser.ScreenParser;
 import org.ofbiz.plugin.parser.SecaParser;
 import org.ofbiz.plugin.parser.ServiceParser;
@@ -66,21 +71,25 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 
-public class LoadOperation extends Job {
+public class LoadOperation extends WorkspaceModifyOperation {
 
 	private Map<String, Service> serviceByName;
 	private Set<String> alreadyParsedJavaFiles = new HashSet<String>();
 	private List<String> screensToParse = new ArrayList<String>();
 	private List<IFile> secasToParse = new ArrayList<IFile>();
 	private IProject project;
+	private Root root;
 
-	public LoadOperation(IProject project) {
-		super("Load Ofbiz resources");
+	public LoadOperation(Root root, IProject project) {
 		this.project = project;
+		this.root = root;
 	}
+	
 
-	@Override
-	protected IStatus run(IProgressMonitor monitor) {
+
+	protected void execute(IProgressMonitor monitor)
+			throws CoreException, InvocationTargetException, InterruptedException {
+
 
 		monitor.beginTask("load OFBiz projects:", IProgressMonitor.UNKNOWN);
 
@@ -90,7 +99,6 @@ public class LoadOperation extends Job {
 		load(project, monitor);
 
 		monitor.done();
-		return Status.OK_STATUS;
 
 	}		
 
@@ -123,6 +131,7 @@ public class LoadOperation extends Job {
 			ofbizProject = OfbizFactory.eINSTANCE.createProject();
 			OfbizModelSingleton.get().addProject(project.getName(), ofbizProject);
 		}
+		ofbizProject.setRoot(root);
 		ofbizProject.getDirectories().clear();
 		ofbizProject.setName(project.getName());
 		ofbizProject.setJavaproject(JavaCore.create(project));
@@ -249,8 +258,30 @@ public class LoadOperation extends Job {
 			monitor.worked(1);
 		}
 
+		for (Directory directory : ofbizProject.getDirectories()) {
+			for (Component  component : directory.getComponents()) {
+				Map<String, Set<String>> fileMethodPairs = new HashMap<String, Set<String>>();
+				for (ServiceFile serviceFile : component.getServiceFiles()) {
+					for (Service service : serviceFile.getServices()) {
+						if (service.getEngine().equals("java")) {
+							String location = service.getLocation();
+							if (!fileMethodPairs.containsKey(location)) {
+								fileMethodPairs.put(location, new HashSet<String>());
+							}
+							fileMethodPairs.get(location).add(service.getInvoke());
+						}
+					}
+				}
+				JavaFiles javaFiles = OfbizFactory.eINSTANCE.createJavaFiles();
+				javaFiles.setComponent(component);
+				for (String key : fileMethodPairs.keySet()) {
+					monitor.subTask("load java files: " + key);
+					new JavaServiceParser(javaFiles, ofbizProject.getJavaproject(), fileMethodPairs.get(key), key);
+				}
+			}
+		}
 		// everything is ok so we can add the loaded project to the root
-
+		System.out.println();
 		//find all service usage
 		//		findServiceUsage(ofbizProject);
 
@@ -466,7 +497,13 @@ public class LoadOperation extends Job {
 		while (listOfWebapps.size() > 0) {
 			WebappModel webappModel = listOfWebapps.remove(0);
 			IFile file = webappModel.getiFile();
-			monitor.subTask("load webapp model: "+file.getName());
+			String webappName;
+			if (file == null) {
+				webappName = "";
+			} else {
+				webappName = file.getName();
+			}
+			monitor.subTask("load webapp model: "+webappName);
 			loadWebappModel(component, file, webappModel.getUri(), listOfWebapps, webappModel.getReferencingController());
 			monitor.worked(1);
 		}
@@ -516,7 +553,7 @@ public class LoadOperation extends Job {
 			listOfWebapps.addAll(parser.getincludeLocations());
 			Plugin.getDefault().getXmlPullParserPool().returnPullParserToPool(xpp);
 		} catch (Exception e) {
-			Plugin.logError("Unable to parse webapp model: "+ file.getName(), e);
+			Plugin.logError("Unable to parse webapp model", e);
 		}
 	}
 
