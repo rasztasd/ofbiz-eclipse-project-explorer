@@ -42,6 +42,7 @@ public class ServiceParser extends Parser {
 	public ServiceParser(Component component, IFile file) {
 		this.file = file;
 		serviceFile = OfbizFactory.eINSTANCE.createServiceFile();
+		serviceFile.setParser(this);
 		String markerKey = component.getName() + file.getName();
 		serviceFile.setMarkerKey(markerKey);
 		createMarker(1, markerKey);
@@ -115,6 +116,7 @@ public class ServiceParser extends Parser {
 		createMarker(xpp.getLineNumber(), markerKey);
 		curService.setMarkerKey(markerKey);
 		curService.setNameToShow(curService.getName());
+		curService.setLookupName(curService.getName());
 		curService.setFile(file);
 		String location = xpp.getAttributeValue(null, "location");
 		if(location!=null) 

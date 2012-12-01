@@ -1,5 +1,6 @@
 package org.ofbiz.plugin.parser;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -15,20 +16,22 @@ import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.ofbiz.plugin.model.JavaHelper;
 import org.ofbiz.plugin.ofbiz.JavaFile;
+import org.ofbiz.plugin.ofbiz.JavaFilePackage;
 import org.ofbiz.plugin.ofbiz.JavaFiles;
 import org.ofbiz.plugin.ofbiz.OfbizFactory;
 import org.ofbiz.plugin.ofbiz.ServiceJavaImpl;
 
 public class JavaServiceParser {
 
-	public JavaServiceParser(JavaFiles javaFiles, IJavaProject javaProject, final Set<String> invokes, String type) {
+	public JavaServiceParser(JavaFilePackage javaFilePackage, IJavaProject javaProject, final Map<String, String> invokes, String type) {
 		try {
 			if (invokes.size() == 0) {
 				return;
 			}
 			final JavaFile javaFile = OfbizFactory.eINSTANCE.createJavaFile();
-			javaFile.setName(type);
-			javaFile.setJavaFiles(javaFiles);
+			int lastIndexOf = type.lastIndexOf(".") + 1;
+			javaFile.setName(type.substring(lastIndexOf));
+			javaFile.setJavaFilePackage(javaFilePackage);
 			IType findType = javaProject.findType(type);
 			if (findType == null) {
 				return;
@@ -44,14 +47,14 @@ public class JavaServiceParser {
 							return true;
 						}
 						String methodName = resolveMethodBinding.getName();
-						if (invokes.contains(methodName)) {
+						if (invokes.get(methodName) != null) {
 							ServiceJavaImpl javaImpl = OfbizFactory.eINSTANCE.createServiceJavaImpl();
 							javaImpl.setJavaFile(javaFile);
 							final String markerKey = "javaImpl" + methodName;
 							javaImpl.setMarkerKey(markerKey);
 							javaImpl.setFile((IFile) cu.getResource());
-							javaImpl.setName(methodName);
-							javaImpl.setNameToShow(methodName);
+							javaImpl.setName(invokes.get(methodName));
+							javaImpl.setNameToShow(invokes.get(methodName));
 							
 							try {
 								IMarker marker = cu.getResource().createMarker("org.ofbiz.plugin.javaServiceImplMarker");

@@ -46,12 +46,13 @@ public class FormParser extends Parser {
 	public FormParser(IFile file, String screenUrl, Project project) {
 		this.file = file;
 		currentForm = OfbizFactory.eINSTANCE.createFormFile();
+		currentForm.setParser(this);
 		Component componentByUrl = ComponentHelper.getComponentByUrl(project, screenUrl);
 		currentForm.setComponent(componentByUrl);
 		currentForm.setFile(file);
 		String markerKey = "screenfile";
 		currentForm.setMarkerKey(markerKey);
-		currentForm.setNameToShow(screenUrl);
+		currentForm.setNameToShow(screenUrl.substring(screenUrl.lastIndexOf("/") + 1));
 		createMarker(1, markerKey);
 		currentForm.setName(screenUrl);
 	}

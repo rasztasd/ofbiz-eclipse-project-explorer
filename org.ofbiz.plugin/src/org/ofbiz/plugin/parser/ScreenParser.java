@@ -52,12 +52,13 @@ public class ScreenParser extends Parser {
 		this.file = file;
 		this.screenUrl = screenUrl;
 		currentScreenFile = OfbizFactory.eINSTANCE.createScreenFile();
+		currentScreenFile.setParser(this);
 		Component componentByUrl = ComponentHelper.getComponentByUrl(project, screenUrl);
 		currentScreenFile.setComponent(componentByUrl);
 		currentScreenFile.setFile(file);
 		String markerKey = "screenfile";
 		currentScreenFile.setMarkerKey(markerKey);
-		currentScreenFile.setNameToShow(screenUrl);
+		currentScreenFile.setNameToShow(screenUrl.substring(screenUrl.lastIndexOf("/") + 1));
 		createMarker(1, markerKey);
 		currentScreenFile.setName(screenUrl);
 	}

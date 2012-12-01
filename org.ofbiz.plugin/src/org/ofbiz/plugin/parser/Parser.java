@@ -28,8 +28,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.ofbiz.plugin.Plugin;
 import org.ofbiz.plugin.ofbiz.Component;
-import org.ofbiz.plugin.ofbiz.HasXmlDefinition;
-import org.ofbiz.plugin.ofbiz.Project;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -128,4 +126,9 @@ public abstract class Parser {
 	
 	}
 	protected abstract String getMarkerType();
+
+	public IFile getFile() {
+		return file;
+	}
+	
 }

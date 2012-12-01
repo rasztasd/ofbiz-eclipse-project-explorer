@@ -46,10 +46,10 @@ public class OfbizQueryParticipant implements IQueryParticipant {
 				if (parameters.length == 2) {
 					//TODO change the parameter and return type to proper lookup
 					//TODO extract the service lookup to allow reuse
-					if (parameters[0].getSource().startsWith("DispatchContext") &&
-					parameters[1].getSource().startsWith("Map") &&
-					sourceMethod.getReturnType().equals("QMap;")
-							) {
+					if ((parameters[0].getSource().startsWith("DispatchContext") &&
+					parameters[1].getSource().startsWith("Map") || parameters[0].getSource().startsWith("HttpServletRequest") &&
+					parameters[1].getSource().startsWith("HttpServletResponse")) &&
+					(sourceMethod.getReturnType().equals("QMap;") || sourceMethod.getReturnType().equals("QString;"))) {
 						Service serviceByJavaMethodName = ServiceHelper.getServiceByJavaMethodName(sourceMethod.getElementName(), projectName);
 						if (serviceByJavaMethodName != null) {
 							IMarker marker = GoToFile.getMarker(serviceByJavaMethodName);
@@ -77,7 +77,6 @@ public class OfbizQueryParticipant implements IQueryParticipant {
 							}
 						}
 					}
-					
 				}
 			}
 		}

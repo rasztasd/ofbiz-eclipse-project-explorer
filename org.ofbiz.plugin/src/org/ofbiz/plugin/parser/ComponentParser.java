@@ -70,7 +70,8 @@ public class ComponentParser extends Parser {
 
 	public ComponentParser(Component component) {
 		assert component != null;
-		this.component = component;		
+		this.component = component;
+		component.setParser(this);
 	}
 
 	public void addMarker() {
@@ -87,7 +88,7 @@ public class ComponentParser extends Parser {
 			String name = xpp.getAttributeValue(null, "name");
 			component.setName(name);
 
-		} else if (xpp.getName().equals(ENTITYRESOURCE)) {
+		} else if (xpp.getName().equals(ENTITYRESOURCE) && xpp.getAttributeValue(null, "type").equals("model")) {
 
 			//TODO: lacks proper error handling if file does not exist
 			IFile file = getResourceFile(xpp.getAttributeValue(null, "location"), component);
@@ -111,7 +112,7 @@ public class ComponentParser extends Parser {
 			//TODO: lacks proper error handling if file does not exist
 			IFile file = getResourceFile(xpp.getAttributeValue(null, "location") + "/WEB-INF/controller.xml", component);
 			if (file != null) {
-				webappModels.add(new WebappModel(file, xpp.getAttributeValue(null, "mount-point").substring(1), null));
+				webappModels.add(new WebappModel(file, xpp.getAttributeValue(null, "mount-point"), null));
 			}
 		} else if (xpp.getName().equals("classpath")) {
 			if ("dir".equals(xpp.getAttributeValue(null, "type"))) {

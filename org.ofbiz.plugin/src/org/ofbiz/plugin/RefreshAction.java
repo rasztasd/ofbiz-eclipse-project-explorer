@@ -39,5 +39,6 @@ public class RefreshAction extends Action {
 			}
 
 		}
+		view.getViewer().refresh();
 	}
 }

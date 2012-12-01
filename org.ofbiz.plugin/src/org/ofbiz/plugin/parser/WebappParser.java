@@ -68,6 +68,7 @@ public class WebappParser extends Parser {
 		this.referencingController = referencingController;
 
 		controller = OfbizFactory.eINSTANCE.createController();
+		controller.setParser(this);
 		controller.setFile(file);
 		controller.setComponent(component);
 		controller.setUri(uri);

@@ -10,7 +10,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="service" lowerBound="1"
         eType="#//Service" eOpposite="#//Service/attributes"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Component" eSuperTypes="#//NamedElement #//FolderElement #//HasXmlDefinition">
+  <eClassifiers xsi:type="ecore:EClass" name="Component" eSuperTypes="#//NamedElement #//FolderElement #//HasXmlDefinition #//ParseableFile">
     <eStructuralFeatures xsi:type="ecore:EReference" name="directory" lowerBound="1"
         eType="#//Directory" eOpposite="#//Directory/components"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependsOn" upperBound="-1"
@@ -29,8 +29,10 @@
         eType="#//EntityFile" containment="true" eOpposite="#//EntityFile/component"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="javaFiles" lowerBound="1"
         eType="#//JavaFiles" containment="true" eOpposite="#//JavaFiles/component"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fileFilesContainer" eType="#//FtlFilesContainer"
+        containment="true" eOpposite="#//FtlFilesContainer/component"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Directory" eSuperTypes="#//NamedElement #//FolderElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Directory" eSuperTypes="#//NamedElement #//FolderElement #//ParseableFile">
     <eStructuralFeatures xsi:type="ecore:EReference" name="components" upperBound="-1"
         eType="#//Component" containment="true" eOpposite="#//Component/directory"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="project" lowerBound="1"
@@ -78,6 +80,8 @@
         eOpposite="#//Root/projects"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="project" lowerBound="1"
         eType="#//IProject" transient="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityEngine" lowerBound="1"
+        eType="#//EntityEngine" containment="true" eOpposite="#//EntityEngine/project"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Root">
     <eStructuralFeatures xsi:type="ecore:EReference" name="projects" upperBound="-1"
@@ -116,6 +120,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="viewLinks" lowerBound="1"
         upperBound="-1" eType="#//ViewLink" containment="true" eOpposite="#//ViewLink/viewEntity"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="Parser" instanceClassName="org.ofbiz.plugin.parser.Parser"
+      serializable="false"/>
   <eClassifiers xsi:type="ecore:EDataType" name="IFile" instanceClassName="org.eclipse.core.resources.IFile"
       serializable="false"/>
   <eClassifiers xsi:type="ecore:EDataType" name="IFolder" instanceClassName="org.eclipse.core.resources.IFolder"
@@ -143,7 +149,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="screen" lowerBound="1"
         eType="#//Screen" eOpposite="#//Screen/actions"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Controller" eSuperTypes="#//NamedElement #//HasXmlDefinition">
+  <eClassifiers xsi:type="ecore:EClass" name="Controller" eSuperTypes="#//NamedElement #//HasXmlDefinition #//ParseableFile">
     <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Component"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="webapp" eType="#//WebApp"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requestMaps" upperBound="-1"
@@ -234,8 +240,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="HasDocumentation" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="documentation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lookupName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ScreenFile" eSuperTypes="#//NamedElement #//HasXmlDefinition">
+  <eClassifiers xsi:type="ecore:EClass" name="ScreenFile" eSuperTypes="#//NamedElement #//HasXmlDefinition #//ParseableFile">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="screens" upperBound="-1"
         eType="#//Screen" containment="true" eOpposite="#//Screen/screenFile"/>
@@ -246,7 +253,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="formFile" lowerBound="1"
         eType="#//FormFile" eOpposite="#//FormFile/forms"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FormFile" eSuperTypes="#//HasXmlDefinition #//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="FormFile" eSuperTypes="#//HasXmlDefinition #//NamedElement #//ParseableFile">
     <eStructuralFeatures xsi:type="ecore:EReference" name="forms" upperBound="-1"
         eType="#//Form" containment="true" eOpposite="#//Form/formFile"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="component" lowerBound="1"
@@ -286,13 +293,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="#//ReferenceIn"
         containment="true" eOpposite="#//ReferenceIn/referenceIn"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ServiceFile" eSuperTypes="#//HasXmlDefinition #//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="ServiceFile" eSuperTypes="#//HasXmlDefinition #//NamedElement #//ParseableFile">
     <eStructuralFeatures xsi:type="ecore:EReference" name="services" upperBound="-1"
         eType="#//Service" containment="true" eOpposite="#//Service/serviceFile"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Component"
         eOpposite="#//Component/serviceFiles"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EntityFile" eSuperTypes="#//HasXmlDefinition #//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="EntityFile" eSuperTypes="#//HasXmlDefinition #//NamedElement #//ParseableFile">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entities" upperBound="-1"
         eType="#//IEntity" containment="true" eOpposite="#//IEntity/entityFile"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Component"
@@ -301,17 +308,63 @@
   <eClassifiers xsi:type="ecore:EClass" name="JavaFiles" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Component"
         eOpposite="#//Component/javaFiles"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="javaFiles" upperBound="-1"
-        eType="#//JavaFile" containment="true" eOpposite="#//JavaFile/javaFiles"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaFilePackages" upperBound="-1"
+        eType="#//JavaFilePackageTopLevel" containment="true" eOpposite="#//JavaFilePackageTopLevel/javaFiles"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JavaFilePackageTopLevel" eSuperTypes="#//JavaFilePackage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaFiles" lowerBound="1"
+        eType="#//JavaFiles" eOpposite="#//JavaFiles/javaFilePackages"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JavaFilePackageNonTopLevel" eSuperTypes="#//JavaFilePackage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="JavaFilePackage" abstract="true" interface="true"
+      eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childPackage" upperBound="-1"
+        eType="#//JavaFilePackage" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childJavaFiles" eType="#//JavaFile"
+        containment="true" eOpposite="#//JavaFile/javaFilePackage"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="JavaFile" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="serviceJavaImpls" upperBound="-1"
         eType="#//ServiceJavaImpl" containment="true" eOpposite="#//ServiceJavaImpl/javaFile"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="javaFiles" eType="#//JavaFiles"
-        eOpposite="#//JavaFiles/javaFiles"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaFilePackage" eType="#//JavaFilePackage"
+        eOpposite="#//JavaFilePackage/childJavaFiles"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ServiceJavaImpl" eSuperTypes="#//NamedElement #//HasXmlDefinition">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="javaFile" eType="#//JavaFile"
-        eOpposite="#//JavaFile/serviceJavaImpls"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaFile" lowerBound="1"
+        eType="#//JavaFile" eOpposite="#//JavaFile/serviceJavaImpls"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EntityEngine" eSuperTypes="#//NamedElement #//HasXmlDefinition #//ParseableFile">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="project" lowerBound="1"
+        eType="#//Project" eOpposite="#//Project/entityEngine"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dataSources" upperBound="-1"
+        eType="#//DataSource" containment="true" eOpposite="#//DataSource/entityEngine"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataSource" eSuperTypes="#//NamedElement #//HasXmlDefinition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityEngine" lowerBound="1"
+        eType="#//EntityEngine" eOpposite="#//EntityEngine/dataSources"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="jdbcDriver" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="jdbcUri" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="JdbcUserName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="jdbcPassword" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParseableFile">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parser" lowerBound="1"
+        eType="#//Parser" transient="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FreemarkerTemplateFile" eSuperTypes="#//NamedElement #//HasXmlDefinition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="freemarkerMacroDeclarations"
+        upperBound="-1" eType="#//FreemarkerMacroDeclaration" containment="true" eOpposite="#//FreemarkerMacroDeclaration/freemarkerTemplateFile"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ftlFilesContainer" eType="#//FtlFilesContainer"
+        eOpposite="#//FtlFilesContainer/freemarkerTemplateFiles"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FreemarkerMacroDeclaration" eSuperTypes="#//HasDocumentation #//NamedElement #//HasXmlDefinition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="freemarkerTemplateFile"
+        lowerBound="1" eType="#//FreemarkerTemplateFile" eOpposite="#//FreemarkerTemplateFile/freemarkerMacroDeclarations"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FtlFilesContainer" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Component"
+        eOpposite="#//Component/fileFilesContainer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="freemarkerTemplateFiles"
+        upperBound="-1" eType="#//FreemarkerTemplateFile" containment="true" eOpposite="#//FreemarkerTemplateFile/ftlFilesContainer"/>
   </eClassifiers>
 </ecore:EPackage>

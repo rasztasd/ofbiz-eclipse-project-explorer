@@ -94,6 +94,7 @@ public class OfbizValidateHandler extends AbstractHandler {
 
 		public ControllerXmlParser(Controller controller) {
 			this.controller = controller;
+			controller.setParser(this);
 		}
 
 		@Override

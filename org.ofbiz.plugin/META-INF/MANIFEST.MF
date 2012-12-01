@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OFBiz IDE Plugin
 Bundle-SymbolicName: org.ofbiz.plugin;singleton:=true
-Bundle-Version: 1.2.2.6
+Bundle-Version: 1.2.3.5
 Bundle-Activator: org.ofbiz.plugin.Plugin
 Bundle-Vendor: Daniel McAllister
 Require-Bundle: org.eclipse.jface.text;visibility:=reexport,
@@ -14,23 +14,46 @@ Require-Bundle: org.eclipse.jface.text;visibility:=reexport,
  org.eclipse.ui.editors,
  org.eclipse.help.base,
  org.eclipse.ui.workbench.texteditor,
- org.eclipse.jdt.apt.ui;bundle-version="3.3.200",
- org.eclipse.ui.forms;bundle-version="3.4.1",
- org.eclipse.wst.sse.core;bundle-version="1.1.402",
+ org.eclipse.jdt.apt.ui;visibility:=reexport,
+ org.eclipse.ui.forms;visibility:=reexport,
+ org.eclipse.wst.sse.core;visibility:=reexport,
  org.eclipse.emf.common;visibility:=reexport,
  org.eclipse.emf.edit.ui,
  org.eclipse.debug.core,
  org.eclipse.debug.ui,
- org.eclipse.ui.console;bundle-version="3.5.100",
+ org.eclipse.ui.console;visibility:=reexport,
  org.eclipse.jdt.ui,
- org.eclipse.search;bundle-version="3.7.0",
- org.eclipse.emf.ecore.xmi;bundle-version="2.7.0",
+ org.eclipse.search;visibility:=reexport,
+ org.eclipse.emf.ecore.xmi;visibility:=reexport,
  org.eclipse.gef;visibility:=reexport,
  org.eclipse.zest.core;bundle-version="1.3.0";visibility:=reexport,
- org.eclipse.zest.layouts;bundle-version="1.1.0";visibility:=reexport
+ org.eclipse.zest.layouts;bundle-version="1.1.0";visibility:=reexport,
+ org.eclipse.ant.core;visibility:=reexport,
+ org.apache.ant;visibility:=reexport,
+ org.eclipse.ant.launching;bundle-version="1.0.100";visibility:=reexport,
+ org.eclipse.core.externaltools;bundle-version="1.0.100";visibility:=reexport,
+ org.eclipse.jdt.debug,
+ org.jboss.ide.eclipse.freemarker;bundle-version="1.0.2"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: bsh,
+ freemarker.cache,
+ freemarker.core,
+ freemarker.debug,
+ freemarker.debug.impl,
+ freemarker.ext.ant,
+ freemarker.ext.beans,
+ freemarker.ext.dom,
+ freemarker.ext.jdom,
+ freemarker.ext.jsp,
+ freemarker.ext.jython,
+ freemarker.ext.rhino,
+ freemarker.ext.servlet,
+ freemarker.ext.util,
+ freemarker.ext.xml,
+ freemarker.log,
+ freemarker.template,
+ freemarker.template.utility,
  javax.xml.namespace,
  org.ofbiz.plugin;
   uses:="org.eclipse.emf.ecore,
@@ -85,4 +108,7 @@ Bundle-ClassPath: .,
  lib/xpp3-1.1.4.jar,
  lib/xpp3_xpath-1.1.4.jar,
  lib/bsh-2.0b4.jar,
- lib/org.eclipse.emf.ecore_2.7.0.jar
+ lib/org.eclipse.emf.ecore_2.7.0.jar,
+ lib/apache-ant-1.8.4/lib/ant.jar,
+ lib/tools.jar,
+ lib/freemarker-2.3.8.jar

@@ -116,35 +116,6 @@
               tooltip="Show Service invocation in Java file">
         </action>
      </objectContribution>
-     <objectContribution
-           id="org.ofbiz.plugin.entity"
-           objectClass="org.ofbiz.plugin.ofbiz.IEntity">
-        <action
-              class="org.ofbiz.plugin.OpenFileAction"
-              icon="icons/full/obj16/IEntity.gif"
-              id="org.ofbiz.plugin.action.showentitydef"
-              label="Show Definition"
-              tooltip="Opens the file containing the definition of this Entity.">
-        </action>
-     </objectContribution>
-     <objectContribution
-           id="org.ofbiz.plugin.service"
-           objectClass="org.ofbiz.plugin.ofbiz.Service">
-        <action
-              class="org.ofbiz.plugin.OpenFileAction"
-              icon="icons/full/obj16/Service.gif"
-              id="org.ofbiz.plugin.action.showservicedef"
-              label="Show Definition"
-              tooltip="Opens the file containing the definition of this Service.">
-        </action>
-        <action
-              class="org.ofbiz.plugin.OpenFileAction"
-              icon="icons/full/obj16/Service.gif"
-              id="org.ofbiz.plugin.action.showserviceimpl"
-              label="Show Implementation"
-              tooltip="Opens the file containing the implementation of this Service.">
-        </action>
-     </objectContribution>
      <viewerContribution
            id="org.ofbiz.plugin.xmleditor"
            targetID="#TextEditorContext">
@@ -184,17 +155,6 @@
         </action>
      </viewerContribution>
      <objectContribution
-           id="org.ofbiz.plugin.hasxmldefinition"
-           objectClass="org.ofbiz.plugin.ofbiz.HasXmlDefinition">
-        <action
-              class="org.ofbiz.plugin.parser.GotoXmlDefinition"
-              icon="icons/full/obj16/IEntity.gif"
-              id="org.ofbiz.plugin.action.showxmldefinition"
-              label="Show Definition"
-              tooltip="Show xml file.">
-        </action>
-     </objectContribution>
-     <objectContribution
            id="org.ofbiz.plugin.hasdocumentation"
            objectClass="org.ofbiz.plugin.ofbiz.HasDocumentation">
         <action
@@ -206,6 +166,17 @@
         </action>
      </objectContribution>
      <objectContribution
+           id="org.ofbiz.plugin.hasparser"
+           objectClass="org.ofbiz.plugin.ofbiz.ParseableFile">
+        <action
+              class="org.ofbiz.plugin.handlers.ReParseFile"
+              icon="icons/full/obj16/IEntity.gif"
+              id="org.ofbiz.plugin.action.reparsefile"
+              label="Reload file"
+              tooltip="Reparse file">
+        </action>
+     </objectContribution>
+     <objectContribution
            id="org.ofbiz.plugin.viewEntitySql"
            objectClass="org.ofbiz.plugin.ofbiz.ViewEntity">
         <action
@@ -214,6 +185,29 @@
               id="org.ofbiz.plugin.actionviewEntitySql"
               label="Show sql"
               tooltip="Show sql.">
+        </action>
+     </objectContribution>
+     <objectContribution
+           id="org.ofbiz.plugin.compileComponent"
+           objectClass="org.ofbiz.plugin.ofbiz.Component">
+        <action
+              class="org.ofbiz.plugin.handlers.CompileComponent"
+              icon="icons/full/obj16/Service.gif"
+              id="org.ofbiz.plugin.compileComponentId"
+              label="Compile"
+              tooltip="Compile.">
+        </action>
+     </objectContribution>
+     
+     <objectContribution
+           id="org.ofbiz.plugin.queryIEntityFromRunning"
+           objectClass="org.ofbiz.plugin.ofbiz.IEntity">
+        <action
+              class="org.ofbiz.plugin.handlers.QuaryEntityHandler"
+              icon="icons/full/obj16/Service.gif"
+              id="org.ofbiz.plugin.compileComponentId"
+              label="Query entity."
+              tooltip="Query entity.">
         </action>
      </objectContribution>
      
@@ -249,6 +243,11 @@
            id="org.ofbiz.plugin.commands.openXmlDefinitionCommand"
            name="Open Ofbiz file">
      </command>
+     <command
+           categoryId="org.ofbiz.plugin.commands.category"
+           id="org.ofbiz.plugin.commands.openDocumentationCommand"
+           name="Show Ofbiz documentation">
+     </command>
   </extension>
   <extension
         point="org.eclipse.ui.handlers">
@@ -263,7 +262,11 @@
 	<handler
            class="org.ofbiz.plugin.handlers.opencomponent.OpenOfbizComponentDialogHandler"
            commandId="org.ofbiz.plugin.commands.openXmlDefinitionCommand">
-     </handler>     
+     </handler>
+ 	<handler
+    	   class="org.ofbiz.plugin.handlers.showdocumentation.OpenDocumentationHandler"
+    	   commandId="org.ofbiz.plugin.commands.openDocumentationCommand">
+ 	</handler>     
   </extension>
   <extension
         point="org.eclipse.ui.bindings">
@@ -278,6 +281,12 @@
            contextId="org.eclipse.ui.contexts.window"
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
            sequence="M1+M3+X">
+     </key>
+     <key
+           commandId="org.ofbiz.plugin.commands.openDocumentationCommand"
+           contextId="org.eclipse.ui.contexts.window"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+           sequence="M1+M2+D">
      </key>
   </extension>
   <extension
@@ -302,6 +311,11 @@
                  commandId="org.ofbiz.plugin.commands.openXmlDefinitionCommand"
                  id="org.ofbiz.plugin.menus.openXmlDefinitionCommand"
                  mnemonic="X">
+           </command>           
+           <command
+                 commandId="org.ofbiz.plugin.commands.openDocumentationCommand"
+                 id="org.ofbiz.plugin.menus.openDocumentationCommand"
+                 mnemonic="D">
            </command>           
         </menu>
      </menuContribution>
@@ -411,6 +425,14 @@
         value="true">
 	 </persistent>
   </extension>
+   <extension
+        id="ftlFileMarker"
+        point="org.eclipse.core.resources.markers">
+	 <super type="org.ofbiz.plugin.text"></super>
+	 <persistent
+        value="true">
+	 </persistent>
+  </extension>
   
   <extension
         point="org.eclipse.debug.core.launchConfigurationTypes">
@@ -458,6 +480,11 @@
        icon="icons/breakmarker.gif"
        id="beanshellBreakPointImage"
        markertype="org.ofbiz.plugin.breakpointMarker"/>
+    <imageprovider
+          id="org.ofbiz.plugin.serviceImplMarkerImage"
+          markertype="org.ofbiz.plugin.javaServiceImplMarker"
+          icon="icons/full/obj16/Service.gif">
+    </imageprovider>
   </extension>
   <extension
          id="breakpointMarker"
@@ -579,5 +606,19 @@
                class="org.ofbiz.plugin.dnd.DropProvider"
                id="org.ofbiz.plugin.action1">
          </action>
+      </extension>
+      <extension
+            point="org.eclipse.jdt.debug.jdiclient">
+      </extension>
+      <extension
+            point="org.eclipse.ui.editors">
+         <editor
+               class="org.jboss.ide.eclipse.freemarker.editor.FTLMultiEditor"
+               contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+               extensions="ftl"
+               icon="icons/sample.gif"
+               id="org.ofbiz.plugin.editors.ftl.FTLEditor"
+               name="Extended Freemarker Editor">
+         </editor>
       </extension>
 </plugin>

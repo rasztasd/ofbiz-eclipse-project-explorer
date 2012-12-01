@@ -30,13 +30,15 @@
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Attribute/service"/>
     </genClasses>
     <genClasses ecoreClass="ofbiz.ecore#//Component">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/services"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/directory"/>
-      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
-          ecoreFeature="ecore:EReference ofbiz.ecore#//Component/entities"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/dependsOn"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/webapps"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/screens"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/screenFiles"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/formFiles"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/classpathEntries"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/serviceFiles"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/entityFiles"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Component/javaFiles"/>
     </genClasses>
     <genClasses ecoreClass="ofbiz.ecore#//Directory">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Directory/components"/>
@@ -60,7 +62,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//FolderElement/folder"/>
     </genClasses>
     <genClasses ecoreClass="ofbiz.ecore#//IEntity">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ofbiz.ecore#//IEntity/component"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//IEntity/entityFile"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//IEntity/fields"/>
     </genClasses>
     <genClasses ecoreClass="ofbiz.ecore#//NamedElement">
@@ -79,8 +81,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Service/engine"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Service/location"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Service/invoke"/>
-      <genFeatures property="None" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Service/attributes"/>
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Service/component"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Service/serviceFile"/>
       <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
           ecoreFeature="ecore:EReference ofbiz.ecore#//Service/implements"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Service/autoAttributes"/>
@@ -89,14 +90,19 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Service/entity"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Service/extends"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Service/serviceInvocations"/>
+      <genFeatures property="None" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Service/attributes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Service/secas"/>
     </genClasses>
     <genClasses ecoreClass="ofbiz.ecore#//TypedElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//TypedElement/type"/>
     </genClasses>
-    <genClasses ecoreClass="ofbiz.ecore#//ViewEntity"/>
+    <genClasses ecoreClass="ofbiz.ecore#//ViewEntity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//ViewEntity/memberEntities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//ViewEntity/viewLinks"/>
+    </genClasses>
     <genClasses ecoreClass="ofbiz.ecore#//Screen">
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Screen/component"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Screen/actions"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Screen/screenFile"/>
     </genClasses>
     <genClasses ecoreClass="ofbiz.ecore#//Action">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Action/screen"/>
@@ -106,6 +112,8 @@
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Controller/webapp"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Controller/requestMaps"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Controller/viewMaps"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//Controller/uri"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Controller/referencedWebapp"/>
     </genClasses>
     <genClasses ecoreClass="ofbiz.ecore#//RequestMap">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//RequestMap/controller"/>
@@ -130,6 +138,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//WebApp/uri"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//WebApp/controller"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//WebApp/component"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//WebApp/referencedControllers"/>
     </genClasses>
     <genClasses image="false" ecoreClass="ofbiz.ecore#//AbstractEvent">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//AbstractEvent/requestMap"/>
@@ -161,10 +170,76 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HasXmlDefinition/file"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HasXmlDefinition/hyperlinkKey"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HasXmlDefinition/hyperlinkText"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HasXmlDefinition/searchScropeKeyword"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HasXmlDefinition/nameToShow"/>
     </genClasses>
     <genClasses image="false" ecoreClass="ofbiz.ecore#//HasDocumentation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//HasDocumentation/documentation"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//ScreenFile" labelFeature="#//ofbiz/HasXmlDefinition/nameToShow">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//ScreenFile/fileName"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//ScreenFile/screens"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//ScreenFile/component"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//Form">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Form/formFile"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//FormFile" labelFeature="#//ofbiz/HasXmlDefinition/nameToShow">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//FormFile/forms"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//FormFile/component"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//FormFile/fileName"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//ClasspathEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//ClasspathEntry/classpathLocation"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//ClasspathEntry/component"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//Seca">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//Seca/service"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//RequestResponse"/>
+    <genClasses ecoreClass="ofbiz.ecore#//MemberEntity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//MemberEntity/entityAlias"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//MemberEntity/entityName"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//MemberEntity/viewEntity"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//ViewLink">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//ViewLink/entityAlias"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//ViewLink/relEntityAlias"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ofbiz.ecore#//ViewLink/optional"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//ViewLink/viewEntity"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//ReferenceIn">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//ReferenceIn/referenceIn"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ofbiz.ecore#//ReferenceIn/references"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//Referencable">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//Referencable/reference"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//ServiceFile">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//ServiceFile/services"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//ServiceFile/component"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//EntityFile">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//EntityFile/entities"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//EntityFile/component"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//JavaFiles">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//JavaFiles/component"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//JavaFiles/javaFilePackages"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//JavaFilePackageTopLevel">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//JavaFilePackageTopLevel/javaFiles"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//JavaFilePackageNonTopLevel"/>
+    <genClasses image="false" ecoreClass="ofbiz.ecore#//JavaFilePackage">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//JavaFilePackage/childPackage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//JavaFilePackage/childJavaFiles"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//JavaFile">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ofbiz.ecore#//JavaFile/serviceJavaImpls"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//JavaFile/javaFilePackage"/>
+    </genClasses>
+    <genClasses ecoreClass="ofbiz.ecore#//ServiceJavaImpl">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ofbiz.ecore#//ServiceJavaImpl/javaFile"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

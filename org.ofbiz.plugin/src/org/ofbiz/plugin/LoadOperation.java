@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -48,6 +49,10 @@ import org.ofbiz.plugin.ofbiz.AbstractViewMap;
 import org.ofbiz.plugin.ofbiz.Component;
 import org.ofbiz.plugin.ofbiz.Controller;
 import org.ofbiz.plugin.ofbiz.Directory;
+import org.ofbiz.plugin.ofbiz.FtlFilesContainer;
+import org.ofbiz.plugin.ofbiz.JavaFilePackage;
+import org.ofbiz.plugin.ofbiz.JavaFilePackageNonTopLevel;
+import org.ofbiz.plugin.ofbiz.JavaFilePackageTopLevel;
 import org.ofbiz.plugin.ofbiz.JavaFiles;
 import org.ofbiz.plugin.ofbiz.OfbizFactory;
 import org.ofbiz.plugin.ofbiz.Project;
@@ -59,8 +64,10 @@ import org.ofbiz.plugin.ofbiz.ServiceInvocation;
 import org.ofbiz.plugin.ofbiz.WebApp;
 import org.ofbiz.plugin.parser.ComponentParser;
 import org.ofbiz.plugin.parser.DirectoryParser;
+import org.ofbiz.plugin.parser.EntityEngineParser;
 import org.ofbiz.plugin.parser.EntityParser;
 import org.ofbiz.plugin.parser.FormParser;
+import org.ofbiz.plugin.parser.FreemarkerParser;
 import org.ofbiz.plugin.parser.JavaServiceParser;
 import org.ofbiz.plugin.parser.ScreenParser;
 import org.ofbiz.plugin.parser.SecaParser;
@@ -84,7 +91,7 @@ public class LoadOperation extends WorkspaceModifyOperation {
 		this.project = project;
 		this.root = root;
 	}
-	
+
 
 
 	protected void execute(IProgressMonitor monitor)
@@ -105,7 +112,7 @@ public class LoadOperation extends WorkspaceModifyOperation {
 	private void load(IProject project, IProgressMonitor monitor) {
 
 		monitor.subTask("load project: "+project.getName());
-		
+
 		try {
 			for (IMarker marker : project.findMarkers("org.ofbiz.plugin.text", true, IResource.DEPTH_INFINITE)) {
 				marker.delete();
@@ -114,9 +121,9 @@ public class LoadOperation extends WorkspaceModifyOperation {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		// parse project configuration
-		
+
 		IResource res = project.findMember(Plugin.BASECONFIG);
 		if (res==null || !res.exists() || !(res instanceof IFile)) {
 			Plugin.logError("Project configuration does not exist: "+res.getName(), null);
@@ -137,11 +144,14 @@ public class LoadOperation extends WorkspaceModifyOperation {
 		ofbizProject.setJavaproject(JavaCore.create(project));
 		ofbizProject.setProject(project);
 
-
-		DirectoryParser parser = new DirectoryParser(ofbizProject);
 		try {
 			XmlPullParser xpp =
 					Plugin.getDefault().getXmlPullParserPool().getPullParserFromPool();
+
+			IFile entityEngineXmlFile = (IFile) project.findMember("framework/entity/config/entityengine.xml");
+			new EntityEngineParser(ofbizProject, entityEngineXmlFile).processDocument(xpp, entityEngineXmlFile);
+
+			DirectoryParser parser = new DirectoryParser(ofbizProject);
 			parser.processDocument(xpp, (IFile)res);
 			Plugin.getDefault().getXmlPullParserPool().returnPullParserToPool(xpp);
 		} catch (Exception e) {
@@ -260,28 +270,83 @@ public class LoadOperation extends WorkspaceModifyOperation {
 
 		for (Directory directory : ofbizProject.getDirectories()) {
 			for (Component  component : directory.getComponents()) {
-				Map<String, Set<String>> fileMethodPairs = new HashMap<String, Set<String>>();
+				TreeMap<String, Map<String, String>> fileMethodPairs = new TreeMap<String, Map<String, String>>();
+				TreeMap<String, JavaFilePackage> packageNamePackages = new TreeMap<String, JavaFilePackage>();
 				for (ServiceFile serviceFile : component.getServiceFiles()) {
 					for (Service service : serviceFile.getServices()) {
 						if (service.getEngine().equals("java")) {
 							String location = service.getLocation();
 							if (!fileMethodPairs.containsKey(location)) {
-								fileMethodPairs.put(location, new HashSet<String>());
+								fileMethodPairs.put(location, new HashMap<String, String>());
 							}
-							fileMethodPairs.get(location).add(service.getInvoke());
+							fileMethodPairs.get(location).put(service.getInvoke(), service.getName());
 						}
 					}
 				}
 				JavaFiles javaFiles = OfbizFactory.eINSTANCE.createJavaFiles();
-				javaFiles.setComponent(component);
+				javaFiles.setName("src");				
 				for (String key : fileMethodPairs.keySet()) {
+					javaFiles.setComponent(component);
 					monitor.subTask("load java files: " + key);
-					new JavaServiceParser(javaFiles, ofbizProject.getJavaproject(), fileMethodPairs.get(key), key);
+					String packageName = key.substring(0, key.lastIndexOf("."));
+					JavaFilePackage javaFilePackage = packageNamePackages.get(packageName);
+					if (javaFilePackage == null) {
+						String parentPackageName = packageName.substring(0, packageName.lastIndexOf("."));
+						if (packageNamePackages.get(parentPackageName) == null) {
+							JavaFilePackageTopLevel createJavaFilePackageTopLevel = OfbizFactory.eINSTANCE.createJavaFilePackageTopLevel();
+							javaFilePackage = createJavaFilePackageTopLevel;
+							createJavaFilePackageTopLevel.setJavaFiles(javaFiles);
+							javaFilePackage.setName(packageName);
+						} else {
+							JavaFilePackage parentPackage = packageNamePackages.get(parentPackageName);
+							JavaFilePackageNonTopLevel createJavaFilePackageNonTopLevel = OfbizFactory.eINSTANCE.createJavaFilePackageNonTopLevel();
+							javaFilePackage = createJavaFilePackageNonTopLevel;
+							parentPackage.getChildPackage().add(javaFilePackage);
+							javaFilePackage.setName(packageName.substring(packageName.lastIndexOf(".") + 1));
+						}
+
+						packageNamePackages.put(packageName, javaFilePackage);
+					}
+					new JavaServiceParser(javaFilePackage, ofbizProject.getJavaproject(), fileMethodPairs.get(key), key);
 				}
 			}
 		}
+
+		try {
+			for (Directory directory : ofbizProject.getDirectories()) {
+				for (Component component : directory.getComponents()) {
+					final FtlFilesContainer filesContainer = OfbizFactory.eINSTANCE.createFtlFilesContainer();
+					filesContainer.setName("ftl files");
+					filesContainer.setComponent(component);
+					component.getFolder().accept(new IResourceVisitor() {
+
+						@Override
+						public boolean visit(IResource resource) throws CoreException {
+							if (resource instanceof IFile) {
+								IFile iFile = (IFile) resource;
+								try {
+									if (iFile.getName().endsWith(".ftl")) {
+										new FreemarkerParser(filesContainer, iFile);
+									}
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								return false;
+							} else {
+								return true;
+							}
+						}
+					});
+				}
+			}
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		//parser ftl files
+
 		// everything is ok so we can add the loaded project to the root
-		System.out.println();
 		//find all service usage
 		//		findServiceUsage(ofbizProject);
 
@@ -359,19 +424,19 @@ public class LoadOperation extends WorkspaceModifyOperation {
 	}
 
 	private Service getServiceByName(String name) {
-//		if (serviceByName == null) {
-//			serviceByName = new HashMap<String, Service>();
-//			for (Project project : root.getProjects()) {
-//				for (Directory directory : project.getDirectories()) {
-//					for (Component component : directory.getComponents()) {
-//						for (Service service : component.getServices()) {
-//							serviceByName.put(service.getName(), service);
-//						}
-//					}
-//				}
-//			}
-//		}
-//		return serviceByName.get(name);
+		//		if (serviceByName == null) {
+		//			serviceByName = new HashMap<String, Service>();
+		//			for (Project project : root.getProjects()) {
+		//				for (Directory directory : project.getDirectories()) {
+		//					for (Component component : directory.getComponents()) {
+		//						for (Service service : component.getServices()) {
+		//							serviceByName.put(service.getName(), service);
+		//						}
+		//					}
+		//				}
+		//			}
+		//		}
+		//		return serviceByName.get(name);
 		return null;
 	}
 
@@ -448,6 +513,9 @@ public class LoadOperation extends WorkspaceModifyOperation {
 	private void load(Component component,IProgressMonitor monitor) {
 
 		monitor.subTask("load component: "+component.getName());
+		if (component.getFolder().findMember("ignore") != null) { //ignore file found, ignore component parse
+			return;
+		}
 
 		// parse component configuration
 
